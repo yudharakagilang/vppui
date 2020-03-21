@@ -5,9 +5,10 @@ import ConnectionPlugin from 'rete-connection-plugin';
 import ContextMenuPlugin from 'rete-context-menu-plugin';
 import { NumComponent } from './components/number-component';
 import { AddComponent } from './components/add-component';
-import { GenerateNumComponent} from './components/generateNum-component'
-import { MqttSubComponent} from './components/mqttSub-component'
-import { MqttPubComponent} from './components/mqttPub-component'
+import { GenerateNumComponent} from './components/generateNum-component';
+import { MqttSubComponent} from './components/mqttSub-component';
+import { MqttPubComponent} from './components/mqttPub-component';
+import { MqttPostgresComponent} from './components/mqttPostgres-component';
 import { DummyDataComponent} from './components/dummyData-component'
 import { AngularRenderPlugin } from 'rete-angular-render-plugin';
 import { HttpClient } from '@angular/common/http';
@@ -63,7 +64,7 @@ public getData(){
   async ngAfterViewInit() {
     const container = this.el.nativeElement;
 
-    const components = [new NumComponent(), new AddComponent(), new GenerateNumComponent(),new MqttSubComponent(),new MqttPubComponent(), new DummyDataComponent];
+    const components = [new NumComponent(), new AddComponent(), new GenerateNumComponent(),new MqttSubComponent(),new MqttPubComponent(), new DummyDataComponent(), new MqttPostgresComponent()];
 
     const editor = new NodeEditor('demo@0.2.0', container);
 

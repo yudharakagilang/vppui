@@ -10,12 +10,12 @@ export class MqttPubComponent extends Component {
   }
 
   builder(node) {
-    const out1 = new Output('host', 'Host',stringSocket);
-    const out2 = new Output('password', 'Number output socket',stringSocket);
-    const out3 = new Output('username', 'Number output socket',stringSocket);
+    const out1 = new Output('host', 'String output socket',stringSocket);
+    const out2 = new Output('password', 'String output socket',stringSocket);
+    const out3 = new Output('username', 'String output socket',stringSocket);
     const out4 = new Output('port', 'Number output socket',numSocket);
-    const out5 = new Output('topic', 'Number output socket',stringSocket);
-    const out6 = new Output('message', 'Number output socket',stringSocket);
+    const out5 = new Output('topic', 'String output socket',stringSocket);
+    const out6 = new Output('message', 'String output socket',stringSocket);
 
     return node
           .addControl(new StringControl(this.editor, 'host','Host'))
@@ -24,10 +24,10 @@ export class MqttPubComponent extends Component {
           .addControl(new NumControl(this.editor,'port','Port'))
           .addControl(new StringControl(this.editor,'topic','Topic'))
           .addControl(new StringControl(this.editor,'message','Message'))
-          .addOutput(out1)
+          //.addOutput(out1)
   }
 
   worker(node, inputs, outputs) {
-    outputs['name'] = node.data.name;
+    outputs['topic'] = node.data.topic;
   }
 }
