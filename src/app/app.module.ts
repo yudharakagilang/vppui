@@ -1,12 +1,16 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
-import { ReteComponent } from './rete/rete.component';
-import { ReteModule } from 'rete-angular-render-plugin';
-import { NumberComponent } from './rete/controls/number-control';
-import { MyNodeComponent } from './rete/components/node/node.component';
 import { MqttModule, IMqttServiceOptions } from "ngx-mqtt";
 import { HttpClientModule } from '@angular/common/http';
+import { PageNotFoundComponent }   from './client/page-not-found/page-not-found.component';
+import { AppRoutingModule }        from './app-routing.module';
+import { ClientsModule }            from './client/clients.module';
+import { FormsModule }    from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
+import { ToastrModule } from 'ngx-toastr';
+
+
 
 export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
   hostname: 'tailor.cloudmqtt.com',
@@ -20,22 +24,23 @@ export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
 @NgModule({
   declarations: [
     AppComponent,
-    ReteComponent,
-    NumberComponent,
-    MyNodeComponent,
-    
+    PageNotFoundComponent,
 
     
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    ReteModule,
-    MqttModule.forRoot(MQTT_SERVICE_OPTIONS)
+    MqttModule.forRoot(MQTT_SERVICE_OPTIONS),
+    BrowserAnimationsModule,
+    FormsModule,
+    ClientsModule,
+    AppRoutingModule,
+    ToastrModule.forRoot() 
   ],
   providers: [],
-  bootstrap: [AppComponent],
-  entryComponents: [NumberComponent, MyNodeComponent]
+  bootstrap: [AppComponent]
+  
 })
 export class AppModule {}
 
