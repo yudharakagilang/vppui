@@ -23,6 +23,7 @@
     "@ng-bootstrap/ng-bootstrap": "^6.0.2",
     "bootstrap": "^4.4.1",
     "bulma": "^0.8.1",
+    "dotenv": "^8.2.0",
     "jquery": "^3.4.1",
     "lite-server": "^2.5.4",
     "ng2-mqtt": "^0.1.2",

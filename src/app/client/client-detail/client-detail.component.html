@@ -1,18 +1,20 @@
 
 
 <div *ngIf="client$ as client" class=" justify-content-center p-5">
+  <a routerLink="/clients"><button class="btn btn-success pull-right" > Back</button></a>
   <div class="container">
    <div id="accordion">
     <div class="card">
       <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseOne"
             aria-expanded="true" aria-controls="collapseOne">
-        <h5 class="mb-0 font-weight-bold">
-            Client {{client.name}} 
-          <span class="font-weight-light" >
-            Detail
-          </span>
+        <h5 class="mb-0">
+          <a class="btn btn-link font-weight-bold" >
+            Client {{client.name}} Detail
+            	<span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-down"></i></span>
+          </a>
         </h5>
       </div>
+
 
       <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
         <div class="card-body">

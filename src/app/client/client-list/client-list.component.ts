@@ -36,7 +36,7 @@ export class ClientListComponent implements OnInit {
         client => {
           this.clients = client;
         },
-        error => {})
+        error => this.router.navigateByUrl('/login'));
   }
 
   addClient(name: string, location :string, url:string ): void {

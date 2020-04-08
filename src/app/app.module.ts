@@ -9,7 +9,9 @@ import { ClientsModule }            from './client/clients.module';
 import { FormsModule }    from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
 import { ToastrModule } from 'ngx-toastr';
-
+import { RegisterComponent } from './register/register.component';
+import { LoginComponent } from './login/login.component';
+import { authInterceptorProviders } from './_helpers/auth.interceptor';
 
 
 export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
@@ -25,7 +27,8 @@ export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
   declarations: [
     AppComponent,
     PageNotFoundComponent,
-
+    LoginComponent,
+    RegisterComponent,
     
   ],
   imports: [
@@ -38,7 +41,7 @@ export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
     AppRoutingModule,
     ToastrModule.forRoot() 
   ],
-  providers: [],
+  providers: [authInterceptorProviders],
   bootstrap: [AppComponent]
   
 })

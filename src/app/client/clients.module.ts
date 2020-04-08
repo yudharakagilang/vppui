@@ -32,6 +32,7 @@ export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
     FormsModule,
     ClientsRoutingModule,
     ReteModule,
+    BrowserAnimationsModule,
   ],
   declarations: [
     ClientListComponent,

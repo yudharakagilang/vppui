@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Client } from './client';
 import { tap, catchError } from 'rxjs/operators';
+import { environment } from '../_services/url.service';
 
 
 const httpOptions = {
@@ -14,7 +15,7 @@ const httpOptions = {
   providedIn: "root",
 })
 export class ClientService {
-  private baseUrl = "http://localhost:4000/api/";
+  private baseUrl = environment.apiUrl
 
   constructor(
     private http: HttpClient

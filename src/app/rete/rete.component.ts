@@ -1,9 +1,4 @@
-import {
-  Component,
-  AfterViewInit,
-  ViewChild,
-  ElementRef,
-} from "@angular/core";
+import { Component, AfterViewInit, ViewChild, ElementRef } from "@angular/core";
 
 import { NodeEditor, Engine } from "rete";
 import ConnectionPlugin from "rete-connection-plugin";
@@ -20,7 +15,6 @@ import { Router } from "@angular/router";
 import { ClientService } from "../client/client.service";
 import { Client } from "../client/client";
 
-
 // import { writeFileSync, readFileSync } from 'fs';
 
 @Component({
@@ -28,18 +22,12 @@ import { Client } from "../client/client";
   templateUrl: "./rete.component.html",
   styleUrls: ["./rete.component.css"],
 })
-export class ReteComponent implements AfterViewInit{
-  client$: Client
-  status : string = "not Saved"
-  schema : any
+export class ReteComponent implements AfterViewInit {
+  client$: Client;
+  status: string = "not Saved";
+  schema: any;
 
-  
-
-  constructor(
-    private router: Router,
-    private service: ClientService,
-  ) {}
-
+  constructor(private router: Router, private service: ClientService) {}
 
   @ViewChild("nodeEditor", { static: true }) el: ElementRef;
   editor = null;
@@ -49,7 +37,7 @@ export class ReteComponent implements AfterViewInit{
   async ngAfterViewInit() {
     var parts = this.router.url.split("/");
     var lastSegment = parts.pop() || parts.pop(); // handle potential trailing slash
-    
+
     const container = this.el.nativeElement;
 
     const components = [
@@ -77,64 +65,71 @@ export class ReteComponent implements AfterViewInit{
 
     // this.getClient(lastSegment,editor,engine);
 
-      this.service.getClient(lastSegment).subscribe((client) => {
-        this.client$ = client[0];
-        var string1 = JSON.stringify(client[0].data);
+    this.service.getClient(lastSegment)
+    .subscribe((client) => {
+      this.client$ = client[0];
+      var string1
+      console.log(client[0])
+      
 
-        try {
-          editor.fromJSON(JSON.parse(string1))
-          
-        } catch (error) {
-          console.log(error)
-        }
+      try {
+
+        if (client[0].data == null){
         
-      });
-    
-    editor.on(
-      [
-        "process",
-        "nodecreated",
-        "noderemoved",
-        "connectioncreated",
-        "connectionremoved",
-      ],
-      (async () => {
-       
-      
-        await engine.abort();
-        await engine.process(editor.toJSON());
-        this.schema= editor.toJSON();
-        this.save()
+        client[0].data={"id": "demo@0.2.0",
+        "nodes":{}}  
+      }
+        string1 = JSON.stringify(client[0].data);
+      console.log(string1)
+          editor
+            .fromJSON(JSON.parse(string1))
+              .then(()=>{editor.on("error", err => {
+                container.log(err);
+              });
+              editor.on(
+                [
+                  "process",
+                  "nodecreated",
+                  "noderemoved",
+                  "connectioncreated",
+                  "connectionremoved",
+                ],
+                (async () => {
+                  await engine.abort();
+                  engine.process(editor.toJSON());
+                  this.schema = editor.toJSON();
+                  console.log(this.schema);
+                  this.status = "not Saved";
+                }) as any
+              );
+        
+              editor.view.resize();
+              editor.trigger("process");
+              
+            
+              
+              });
+        
+      } catch (error) {
+        console.log(error);
+      }
 
-      
-      }) as any
-    );
-
-      
-    editor.view.resize();
-    editor.trigger("process");
-    
+     
+    });
   }
 
-  save(){
-    var data = this.schema
+  save() {
+    var data = this.schema;
+    console.log(data)
     var parts = this.router.url.split("/");
     var lastSegment = parts.pop() || parts.pop(); // handle potential trailing slash
-    console.log(data)
-    this.service.updateClientData(data,lastSegment)
-    .subscribe(
-      result => {
-      this.status="Saved"
+    this.service.updateClientData(data, lastSegment).subscribe(
+      (result) => {
+        this.status = "Saved";
       },
-      error => {
-        this.status="Not Saved"
-      },
-      () => {
-        // 'onCompleted' callback.
-        // No errors, route to new page here
+      (error) => {
+        this.status = "Not Saved";
       }
     );
-    
   }
- 
 }
