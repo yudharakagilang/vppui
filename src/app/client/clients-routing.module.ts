@@ -8,7 +8,7 @@ const clientsRoutes: Routes = [
   { path: 'clients', redirectTo: '/clients' },
   { path: 'client/:id', redirectTo: '/client/:id' },
   { path: 'clients',  component: ClientListComponent, data:{animation: 'About'} },
-  { path: 'client/:id', component: ClientDetailComponent, data:{animation: 'Home'} }
+  { path: 'client/:id', component: ClientDetailComponent, data:{animation: 'Contact'} }
 ];
 
 @NgModule({

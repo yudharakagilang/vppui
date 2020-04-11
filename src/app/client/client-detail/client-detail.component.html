@@ -1,45 +1,55 @@
+<body>
 
+  <div class="d-flex" id="wrapper">
 
-<div *ngIf="client$ as client" class=" justify-content-center p-5">
-  <a routerLink="/clients"><button class="btn btn-success pull-right" > Back</button></a>
-  <div class="container">
-   <div id="accordion">
-    <div class="card">
-      <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseOne"
-            aria-expanded="true" aria-controls="collapseOne">
-        <h5 class="mb-0">
-          <a class="btn btn-link font-weight-bold" >
-            Client {{client.name}} Detail
-            	<span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-down"></i></span>
-          </a>
-        </h5>
-      </div>
-
-
-      <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-        <div class="card-body">
-        <div class="form-group row">
-              <label class="col-sm-2 col-form-label">ID</label>
-              <div class="col-sm-10">
+    <!-- Sidebar -->
+    <div class="border-right" id="sidebar-wrapper">
+      <div class="sidebar-heading">Menu </div>
+      <div class="list-group list-group-flush">
+        <div class="accordion" id="accordionExample">
+          <div class="card">
+            <div class="card-header" id="headingOne">
+              <h5 class="mb-0">
+                <button routerLink='/clients' class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne"
+                  aria-expanded="true" aria-controls="collapseOne">
+                  Back
+                </button>
+              </h5>
+            </div>
+          </div>
+          <div *ngIf="client$ as client" class="card">
+            <div class="card-header" id="headingTwo">
+              <h5 class="mb-0">
+                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo"
+                  aria-expanded="false" aria-controls="collapseTwo">
+                  Edit Client Data
+                </button>
+              </h5>
+            </div>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+              <div class="card-body">
+                 <div class="form-group row">
+              <label class="col-sm-4 col-form-label">ID</label>
+             <div class="col-sm-8 p-0">
                 <input [(ngModel)]="client._id" type="text" class="form-control" id="inputID" placeholder="ID" disabled/>
               </div>
             </div>
      
             <div class="form-group row">
-              <label class="col-sm-2 col-form-label">Name</label>
-              <div class="col-sm-10">
+              <label class="col-sm-4 col-form-label">Name</label>
+              <div class="col-sm-8 p-0">
                 <input [(ngModel)]="client.name" type="text" class="form-control" id="inputName" placeholder="Name"/>
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputLocation" class="col-sm-2 col-form-label">Location</label>
-              <div class="col-sm-10">
+              <label for="inputLocation" class="col-sm-4 col-form-label">Location</label>
+              <div class="col-sm-8 p-0">
                 <input [(ngModel)]="client.location" type="text" class="form-control" id="inputLocation" placeholder="Location" required>
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputUrl" class="col-sm-2 col-form-label">Url</label>
-              <div class="col-sm-10">
+              <label for="inputUrl" class="col-sm-4 col-form-label">Url</label>
+              <div class="col-sm-8 p-0">
                 <input [(ngModel)]="client.url" type="text" class="form-control" id="inputUrl" placeholder="Url" required>
               </div>
             </div>
@@ -48,18 +58,25 @@
                 <button (click)="save(client)"type="submit" class="btn btn-success">Save</button>
               </div>
             </div>
-       
-
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+    <!-- /#sidebar-wrapper -->
 
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+
+      <div class="container-fluid">
+        <app-rete></app-rete>
+      </div>
     </div>
-  </div>
-  </div>
+    <!-- /#page-content-wrapper -->
 
-  
-  
-  <div class="big">
-    <app-rete></app-rete>
   </div>
+  <!-- /#wrapper -->
+
+
+</body>

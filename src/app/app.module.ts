@@ -12,6 +12,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { authInterceptorProviders } from './_helpers/auth.interceptor';
+import { HashLocationStrategy, LocationStrategy  } from '@angular/common';
 
 
 export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
@@ -41,7 +42,7 @@ export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
     AppRoutingModule,
     ToastrModule.forRoot() 
   ],
-  providers: [authInterceptorProviders],
+  providers: [authInterceptorProviders,{provide : LocationStrategy , useClass: HashLocationStrategy}],
   bootstrap: [AppComponent]
   
 })
