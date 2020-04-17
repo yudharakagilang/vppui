@@ -54,5 +54,5 @@ export class MqttMultiplyComponent extends Component implements AngularComponent
 
   destroyed(node) {
     console.log('destroyed', node);
-  }
+  } 
 }
