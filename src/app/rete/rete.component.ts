@@ -9,6 +9,8 @@ import { GenerateNumComponent } from "./components/generateNum-component";
 import { MqttSubComponent } from "./components/mqttSub-component";
 import { MqttPubComponent } from "./components/mqttPub-component";
 import { MqttPostgresComponent } from "./components/mqttPostgres-component";
+import { MqttAddComponent } from "./components/mqttAdd-component";
+import { MqttMultiplyComponent } from "./components/mqttMultiply-component";
 import { DummyDataComponent } from "./components/dummyData-component";
 import { LogicComponent } from "./components/logic-component";
 import { AngularRenderPlugin } from "rete-angular-render-plugin";
@@ -57,7 +59,9 @@ export class ReteComponent implements AfterViewInit {
       new MqttSubComponent(),
       new MqttPubComponent(),
       new DummyDataComponent(),
-      new LogicComponent(),
+      new MqttPostgresComponent(),
+      new MqttAddComponent(),
+      new MqttMultiplyComponent(),
     ];
 
     const editor = new NodeEditor("demo@0.2.0", container);
