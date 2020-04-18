@@ -65,61 +65,6 @@
               </div>
             </div>
           </div>
-          <div *ngIf="client$ as client" class="card">
-            <div class="card-header" id="headingTwo">
-              <h5 class="mb-0">
-                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree"
-                  aria-expanded="false" aria-controls="collapseTwo">
-                  Edit Database Data
-                </button>
-              </h5>
-            </div>
-            <div id="collapseThree" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-              <div class="card-body">
-                <div class="form-group row">
-                  <label class="col-sm-4 col-form-label">User</label>
-                  <div class="col-sm-8 p-0">
-                    <input [(ngModel)]="client._id" type="text" class="form-control" id="user" placeholder="user"
-                      disabled />
-                  </div>
-                </div>
-
-                <div class="form-group row">
-                  <label class="col-sm-4 col-form-label">Host</label>
-                  <div class="col-sm-8 p-0">
-                    <input [(ngModel)]="client.name" type="text" class="form-control" id="inputHost"
-                      placeholder="Host" />
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="inputDatabase" class="col-sm-4 col-form-label">Database</label>
-                  <div class="col-sm-8 p-0">
-                    <input [(ngModel)]="client.location" type="text" class="form-control" id="inputDatabase"
-                      placeholder="Database" required>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="inputPassword" class="col-sm-4 col-form-label">Password</label>
-                  <div class="col-sm-8 p-0">
-                    <input [(ngModel)]="client.url" [ngModel]='url' (ngModelChange)='onChange($event)' type="text"
-                      class="form-control" id="inputPassword" placeholder="Password" required>
-                  </div>
-                </div>
-                   <div class="form-group row">
-                  <label for="inputPort" class="col-sm-4 col-form-label">Port</label>
-                  <div class="col-sm-8 p-0">
-                    <input [(ngModel)]="client.url" [ngModel]='url' (ngModelChange)='onChange($event)' type="text"
-                      class="form-control" id="inputPort" placeholder="Port" required>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <div class="col-sm-10">
-                    <button (click)="save(client)" type="submit" class="btn btn-success">Save</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>

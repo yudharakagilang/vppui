@@ -44,8 +44,10 @@ export class ClientListComponent implements OnInit {
     name = name.trim();
     location = location.trim();
     url = url.trim();
-    if (!name || !location || !url) { return; }
-    this.service.addClient({name,location,url} as Client)
+    var data='{"id":"demo@0.2.0","nodes":{}}'
+    
+    if (!name || !location || !url || !data) { return; }
+    this.service.addClient({name,location,url,data} as Client)
     .subscribe(client => {
       this.clients.push(client);
       this.showSuccess("Client data added Succesfully")
