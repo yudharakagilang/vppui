@@ -10,6 +10,14 @@ const httpOptions = {
     "Content-Type": "application/json",
   }),
 };
+const httpOptionsSkip = {
+  headers: new HttpHeaders({
+    "Content-Type": "application/json",
+    // "Authorization": "my-auth-token",
+    skip:"true"
+  }),
+};
+
 
 @Injectable({
   providedIn: "root",
@@ -43,4 +51,9 @@ export class ClientService {
   removeClient(id : String){
     return this.http.delete(this.baseUrl+'remove/'+id,httpOptions)
 }
+  sendData(data :any, url:String){
+    var apiUrl = "http://"+url
+    console.log(apiUrl)
+    return this.http.post(apiUrl,data,httpOptions);
+  }
 }

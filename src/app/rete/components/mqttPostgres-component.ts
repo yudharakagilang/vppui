@@ -34,7 +34,7 @@ export class MqttPostgresComponent extends Component implements AngularComponent
           .addControl(new StringControl(this.editor,'passwordDB','Password'))
           .addControl(new StringControl(this.editor,'usernameDB','Username'))
           .addControl(new StringControl(this.editor, 'topicStr', 'Topic', true))
-          .addInput(inp1)        
+          .addInput(inp1)     
   }
 
   worker(node, inputs, outputs) {
@@ -42,5 +42,13 @@ export class MqttPostgresComponent extends Component implements AngularComponent
     const ctrl = <StringControl> this.editor.nodes.find(n => n.id === node.id).controls.get('topicStr');
     ctrl.setValue(str);
     outputs['topic'] = node.data.topic;
+  }
+
+  created(node) {
+    console.log('created', node);
+  }
+
+  destroyed(node) {
+    console.log('destroyed', node);
   }
 }

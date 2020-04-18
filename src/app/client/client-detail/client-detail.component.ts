@@ -14,6 +14,7 @@ import { ToastrService } from 'ngx-toastr'
 })
 export class ClientDetailComponent implements OnInit {
   client$: Client
+  public url : string;
 
   constructor(
     private router: Router,
@@ -28,6 +29,11 @@ export class ClientDetailComponent implements OnInit {
     this.getClient(lastSegment)
   }
 
+  onChange(UpdatedUrl : string) :void
+  {
+    this.url = UpdatedUrl;
+  }
+
   getClient(id : any) {
     
     this.service.getClient(id)
@@ -35,6 +41,7 @@ export class ClientDetailComponent implements OnInit {
         client => {
           this.client$ = client[0];
           this.titleService.setTitle(this.client$.name)
+          this.url = this.client$.url;
         },
         error => this.router.navigateByUrl('/login')
         )

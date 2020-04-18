@@ -10,10 +10,15 @@ import { MqttSubComponent } from "./components/mqttSub-component";
 import { MqttPubComponent } from "./components/mqttPub-component";
 import { MqttPostgresComponent } from "./components/mqttPostgres-component";
 import { DummyDataComponent } from "./components/dummyData-component";
+import { LogicComponent } from "./components/logic-component";
 import { AngularRenderPlugin } from "rete-angular-render-plugin";
 import { Router } from "@angular/router";
 import { ClientService } from "../client/client.service";
 import { Client } from "../client/client";
+import { Input } from '@angular/core';
+import { Observable } from 'rxjs';
+import { url } from 'inspector';
+import { ToastrService } from 'ngx-toastr';
 
 // import { writeFileSync, readFileSync } from 'fs';
 
@@ -25,9 +30,12 @@ import { Client } from "../client/client";
 export class ReteComponent implements AfterViewInit {
   client$: Client;
   status: string = "not Saved";
+  deployStatus: string = "not deployed";
   schema: any;
-
-  constructor(private router: Router, private service: ClientService) {}
+  @Input() childUrl:string;
+  constructor(private router: Router, 
+    private service: ClientService,
+    private toastr : ToastrService) {}
 
   @ViewChild("nodeEditor", { static: true }) el: ElementRef;
   editor = null;
@@ -35,6 +43,7 @@ export class ReteComponent implements AfterViewInit {
   clickEvent() {}
 
   async ngAfterViewInit() {
+    // this.masterName.subscribe((tes) => console.log(tes) )
     var parts = this.router.url.split("/");
     var lastSegment = parts.pop() || parts.pop(); // handle potential trailing slash
 
@@ -42,12 +51,13 @@ export class ReteComponent implements AfterViewInit {
 
     const components = [
       new NumComponent(),
+      new MqttPostgresComponent(),
       new AddComponent(),
       new GenerateNumComponent(),
       new MqttSubComponent(),
       new MqttPubComponent(),
       new DummyDataComponent(),
-      new MqttPostgresComponent(),
+      new LogicComponent(),
     ];
 
     const editor = new NodeEditor("demo@0.2.0", container);
@@ -79,12 +89,17 @@ export class ReteComponent implements AfterViewInit {
         client[0].data={"id": "demo@0.2.0",
         "nodes":{}}  
       }
-        string1 = JSON.stringify(client[0].data);
-      console.log(string1)
-          editor
-            .fromJSON(JSON.parse(string1))
+       // string1 = JSON.stringify(client[0].data);
+      var a = {"id":"demo@0.2.0","nodes":{"7":{"id":7,"data":{"host":"Default Value","password":"Default Value","username":"Default Value","port":0,"topic":"Default Value"},"inputs":{},"outputs":{"topic":{"connections":[{"node":11,"input":"topic","data":{}}]}},"position":[-504.7370808273665,509.3587501118046],"name":"MQTT Client Subscriber"},"11":{"id":11,"data":{"server":"Default Value","portDB":0,"database":"Default Value","table":"Default Value","passwordDB":"Default Value","usernameDB":"Default Value","topicStr":"Default Value"},"inputs":{"topic":{"connections":[{"node":7,"output":"topic","data":{}}]}},"outputs":{},"position":[400.9882422040596,252.3592274028632],"name":"MQTT PostgresDB"},"13":{"id":13,"data":{"server":"Default Value","portDB":0,"database":"Default Value","table":"Default Value","passwordDB":"Default Value","usernameDB":"Default Value","topicStr":"Default Value"},"inputs":{"topic":{"connections":[{"node":14,"output":"topic","data":{}}]}},"outputs":{},"position":[147.24245023797846,-221.6682986089632],"name":"MQTT PostgresDB"},"14":{"id":14,"data":{"host":"Default Value","password":"Default Value","username":"Default Value","port":0,"topic":"Default Value"},"inputs":{},"outputs":{"topic":{"connections":[{"node":13,"input":"topic","data":{}}]}},"position":[-537.7133400902527,113.06553047314732],"name":"MQTT Client Subscriber"}}}
+     
+      var string2 = client[0].data
+      
+      console.log("=========================================")
+      console.log(JSON.parse(string2))
+         editor
+            .fromJSON(JSON.parse(client[0].data))
               .then(()=>{editor.on("error", err => {
-                container.log(err);
+                container.log("err");
               });
               editor.on(
                 [
@@ -98,7 +113,9 @@ export class ReteComponent implements AfterViewInit {
                   await engine.abort();
                   engine.process(editor.toJSON());
                   this.schema = editor.toJSON();
+                  // this.schema = a
                   console.log(this.schema);
+                  console.log(JSON.stringify(this.schema))
                   this.status = "not Saved";
                 }) as any
               );
@@ -121,6 +138,7 @@ export class ReteComponent implements AfterViewInit {
   save() {
     var data = this.schema;
     console.log(data)
+    data = JSON.stringify(data)
     var parts = this.router.url.split("/");
     var lastSegment = parts.pop() || parts.pop(); // handle potential trailing slash
     this.service.updateClientData(data, lastSegment).subscribe(
@@ -131,5 +149,29 @@ export class ReteComponent implements AfterViewInit {
         this.status = "Not Saved";
       }
     );
+  }
+  deploy() {
+    var data = this.schema;
+    var parts = this.router.url.split("/");
+    var lastSegment = parts.pop() || parts.pop(); // handle potential trailing slash
+    this.service.sendData(data, this.childUrl).subscribe(
+      (result) => {
+        this.showSuccess('Schema deployed successfuly')
+        this.deployStatus= "Deployed"
+      },
+      (error) => {
+        this.showError('Error deplyoing schema')
+        this.deployStatus= "not Deployed"
+      }
+    );
+  }
+
+  
+  showSuccess(message : string){
+    this.toastr.success(message, 'Success Info');
+  }
+
+  showError(message : string){
+    this.toastr.error(message, 'Error Info')
   }
 }
