@@ -1,10 +1,9 @@
 import { NgModule }       from '@angular/core';
 import { CommonModule }   from '@angular/common';
 import { FormsModule }    from '@angular/forms';
-
 import { ClientListComponent }    from './client-list/client-list.component';
 import { ClientDetailComponent }  from './client-detail/client-detail.component';
-
+import { ClientChartComponent }  from './client-chart/client-chart.component';
 import { ClientsRoutingModule } from './clients-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReteComponent } from '../rete/rete.component';
@@ -37,6 +36,7 @@ export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
   declarations: [
     ClientListComponent,
     ClientDetailComponent,
+    ClientChartComponent,
     ReteComponent,
     NumberComponent,
     MyNodeComponent
