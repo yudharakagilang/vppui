@@ -13,6 +13,7 @@ import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { authInterceptorProviders } from './_helpers/auth.interceptor';
 import { HashLocationStrategy, LocationStrategy  } from '@angular/common';
+import { GraphQLConfigModule } from './_services/apollo.config';
 
 
 export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
@@ -40,6 +41,7 @@ export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
     FormsModule,
     ClientsModule,
     AppRoutingModule,
+    GraphQLConfigModule,
     ToastrModule.forRoot() 
   ],
   providers: [authInterceptorProviders,{provide : LocationStrategy , useClass: HashLocationStrategy}],
