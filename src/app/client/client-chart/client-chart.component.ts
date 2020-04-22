@@ -5,6 +5,13 @@ import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 import { Data } from '../client';
 import { Router } from '@angular/router';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { HttpLink } from 'apollo-angular-link-http';
+import { HttpClient } from '@angular/common/http';
+import { WebSocketLink } from 'apollo-link-ws';
+import { setContext } from 'apollo-link-context';
+import { split } from 'apollo-link';
+import { getMainDefinition } from 'apollo-utilities';
 // import io from 'socket.io-client';
 
 // const socket = io('http://localhost:3000');
@@ -78,18 +85,58 @@ export class ClientChartComponent implements OnInit,OnDestroy {
   titlePyranometer
   dataPyranometer 
   lastsegment
+  _uri ='http://35.173.73.235:8080/v1alpha1/graphql'
+  _uriWs ='ws://35.173.73.235:8080/v1alpha1/graphql'
 
 
   constructor(private apollo: Apollo,
     private router: Router,
+    private httpClient: HttpClient
      ) {}
 
 ngOnInit() {
   var parts = this.router.url.split('/');
   this.lastsegment= parts.pop() || parts.pop();  // handle potential trailing slash
 
-     // handle potential trailing slash
   
+{
+     const httpLink = new HttpLink(this.httpClient).create({
+      uri: this._uri,
+
+    });
+
+    const subscriptionLink = new WebSocketLink({
+      uri:this._uriWs,
+        
+        options: {
+            reconnect: true,
+            connectionParams: {
+            headers: {
+              "x-hasura-admin-secret": "mylongsecretkey"
+            }
+        }
+      }
+    });
+
+    const auth = setContext((operation, context) => ({
+      headers: {
+        "x-hasura-admin-secret": "mylongsecretkey"
+      },
+    }));
+
+    const link =split(
+      ({ query }) => {  
+        let definition  = getMainDefinition(query);
+        return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
+      },
+      subscriptionLink,
+      auth.concat(httpLink),
+    );
+      this.apollo.create({
+      link,
+     cache: new InMemoryCache()
+    });
+}
 
 //PV
     this.apollo.watchQuery({

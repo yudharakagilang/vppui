@@ -16,13 +16,13 @@ import { ApolloLink } from 'apollo-link';
 export class GraphQLConfigModule {
   constructor(apollo: Apollo, private httpClient: HttpClient) {
     const httpLink = new HttpLink(httpClient).create({
-      uri: 'http://35.173.73.235:8080/v1alpha1/graphql',
+      uri: 'http://35.173.73',
 
     });
 
     const subscriptionLink = new WebSocketLink({
       uri:
-        'ws://35.173.73.235:8080/v1alpha1/graphql',
+        'ws://35.1',
         options: {
             reconnect: true,
             connectionParams: {
@@ -48,9 +48,9 @@ export class GraphQLConfigModule {
       auth.concat(httpLink),
     );
 
-    apollo.create({
-      link,
-      cache: new InMemoryCache()
-    });
+    // apollo.create({
+    //   link,
+    //   cache: new InMemoryCache()
+    // });
   }
 }
