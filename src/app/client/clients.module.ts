@@ -14,6 +14,7 @@ import { MqttModule, IMqttServiceOptions } from "ngx-mqtt";
 import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatTabsModule} from '@angular/material/tabs'
 
 export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
   hostname: 'tailor.cloudmqtt.com',
@@ -31,6 +32,7 @@ export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
     FormsModule,
     ClientsRoutingModule,
     ReteModule,
+    MatTabsModule,
     BrowserAnimationsModule,
   ],
   declarations: [

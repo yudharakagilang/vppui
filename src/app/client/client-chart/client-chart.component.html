@@ -1,7 +1,115 @@
+<div class=" justify-content-center p-5">
+  <div class="container p-3" style="background-color:white;border-radius:5px">
+    <section id="tabs" class="project-tab">
+      <div class="container">
+        <button [routerLink]="['/client', lastsegment]" class="btn btn-link" type="button" data-toggle="collapse"
+                  data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Back
+                </button>
+        <div class="row">
+          <div class="col-md-12">
+            <nav>
+              <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link active" id="nav-pv-tab" data-toggle="tab" href="#nav-pv" role="tab"
+                  aria-controls="nav-home" aria-selected="true">PV</a>
+                <a class="nav-item nav-link" id="nav-dcon-tab" data-toggle="tab" href="#nav-dcon" role="tab"
+                  aria-controls="nav-profile" aria-selected="false">DCON</a>
+                <a class="nav-item nav-link" id="nav-inverter-tab" data-toggle="tab" href="#nav-inverter" role="tab"
+                  aria-controls="nav-contact" aria-selected="false">Inverter</a>
+                <a class="nav-item nav-link" id="nav-state-tab" data-toggle="tab" href="#nav-state" role="tab"
+                  aria-controls="nav-profile" aria-selected="false">State</a>
+                <a class="nav-item nav-link" id="nav-pyranometer-tab" data-toggle="tab" href="#nav-pyranometer"
+                  role="tab" aria-controls="nav-contact" aria-selected="false">Pyranometer</a>
+              </div>
+            </nav>
+         
+            <div class="tab-content" id="nav-tabContent">
+              <div class="tab-pane fade show active" id="nav-pv" role="tabpanel" aria-labelledby="nav-pv-tab">
+                <table class="table" cellspacing="0" >
+                  <thead>
+                    <tr>
+                      <th *ngFor="let data of titlePV">{{data}}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let data of dataPV">
+                      <td>{{data.topic}}</td>
+                      <td>{{data.message}}</td>
+                      <td>{{data.input_time}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
 
-<div class="chart-diplay">
-  <div style="width: 100%">
-    <canvas id="line"></canvas>
+              
+             <div class="tab-pane fade" id="nav-dcon" role="tabpanel" aria-labelledby="nav-dcon-tab">
+                <table class="table" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th *ngFor="let data of titleDcon">{{data}}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let data of dataDcon">
+                      <td>{{data.topic}}</td>
+                      <td>{{data.message}}</td>
+                      <td>{{data.input_time}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="tab-pane fade" id="nav-inverter" role="tabpanel" aria-labelledby="nav-inverter-tab">
+                <table class="table" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th *ngFor="let data of titleInverter">{{data}}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let data of dataInverter">
+                      <td>{{data.topic}}</td>
+                      <td>{{data.message}}</td>
+                      <td>{{data.input_time}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="tab-pane fade" id="nav-state" role="tabpanel" aria-labelledby="nav-state-tab">
+                <table class="table" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th *ngFor="let data of titleState">{{data}}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let data of dataState">
+                      <td>{{data.topic}}</td>
+                      <td>{{data.message}}</td>
+                      <td>{{data.input_time}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="tab-pane fade" id="nav-pyranometer" role="tabpanel" aria-labelledby="nav-pyranometer-tab">
+                <table class="table" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th *ngFor="let data of titlePyranometer">{{data}}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let data of dataPyranometer">
+                      <td>{{data.topic}}</td>
+                      <td>{{data.message}}</td>
+                      <td>{{data.input_time}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div> 
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
-</div>
-
+  <div>

@@ -4,9 +4,11 @@ import { Apollo, ApolloModule } from 'apollo-angular';
 import { HttpLinkModule, HttpLink } from 'apollo-angular-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { split } from 'apollo-link';
-
+import { setContext } from 'apollo-link-context';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
+import { ApolloLink } from 'apollo-link';
+
 
 @NgModule({
   exports: [HttpClientModule, ApolloModule, HttpLinkModule]
@@ -14,7 +16,8 @@ import { getMainDefinition } from 'apollo-utilities';
 export class GraphQLConfigModule {
   constructor(apollo: Apollo, private httpClient: HttpClient) {
     const httpLink = new HttpLink(httpClient).create({
-      uri: 'http://35.173.73.235:8080/v1alpha1/graphql'
+      uri: 'http://35.173.73.235:8080/v1alpha1/graphql',
+
     });
 
     const subscriptionLink = new WebSocketLink({
@@ -26,18 +29,23 @@ export class GraphQLConfigModule {
             headers: {
               "x-hasura-admin-secret": "mylongsecretkey"
             }
-
         }
       }
     });
 
-    const link = split(
-      ({ query }) => {
+    const auth = setContext((operation, context) => ({
+      headers: {
+        "x-hasura-admin-secret": "mylongsecretkey"
+      },
+    }));
+
+    const link =split(
+      ({ query }) => {  
         let definition  = getMainDefinition(query);
         return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
       },
       subscriptionLink,
-      httpLink
+      auth.concat(httpLink),
     );
 
     apollo.create({

@@ -9,9 +9,10 @@ const clientsRoutes: Routes = [
   { path: 'clients', redirectTo: '/clients' },
   { path: 'client/:id', redirectTo: '/client/:id' },
   { path: 'chart/:id', redirectTo: '/chart/:id' },
-  { path: 'clients',  component: ClientListComponent, data:{animation: 'About'} },
-  { path: 'client/:id', component: ClientDetailComponent, data:{animation: 'Contact'} },
-  { path: 'chart/:id', component: ClientChartComponent, data:{animation: 'Contact'} }
+  { path: 'clients',  component: ClientListComponent, data:{animation: 'Home'} },
+  { path: 'client/:id', component: ClientDetailComponent, data:{animation: 'About'} },
+  { path: 'chart/:id', component: ClientChartComponent, data:{animation: 'Contact'} },
+
 ];
 
 @NgModule({
