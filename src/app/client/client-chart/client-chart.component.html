@@ -10,7 +10,7 @@
           <div class="col-md-12">
             <nav>
               <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                <a class="nav-item nav-link active" id="nav-pv-tab" data-toggle="tab" href="#nav-pv" role="tab"
+                <a *ngIf="dataPV" class="nav-item nav-link active" id="nav-pv-tab" data-toggle="tab" href="#nav-pv" role="tab"
                   aria-controls="nav-home" aria-selected="true">PV</a>
                 <a class="nav-item nav-link" id="nav-dcon-tab" data-toggle="tab" href="#nav-dcon" role="tab"
                   aria-controls="nav-profile" aria-selected="false">DCON</a>
@@ -20,6 +20,8 @@
                   aria-controls="nav-profile" aria-selected="false">State</a>
                 <a class="nav-item nav-link" id="nav-pyranometer-tab" data-toggle="tab" href="#nav-pyranometer"
                   role="tab" aria-controls="nav-contact" aria-selected="false">Pyranometer</a>
+                <a class="nav-item nav-link" id="nav-temperature-tab" data-toggle="tab" href="#nav-temperature"
+                  role="tab" aria-controls="nav-contact" aria-selected="false">Temperature</a>
               </div>
             </nav>
 
@@ -102,6 +104,22 @@
                       <td>{{data.topic}}</td>
                       <td>{{data.message}}</td>
                       <td>{{data.input_time}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+                <div class="tab-pane fade" id="nav-temperature" role="tabpanel" aria-labelledby="nav-temperature-tab">
+                <table class="table" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th *ngFor="let data of titleTemperature">{{data}}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let data of dataTemperature">
+                      <td>{{data.temperature}}</td>
+                      <td>{{data.location}}</td>
+                      <td>{{data.recorded_at}}</td>
                     </tr>
                   </tbody>
                 </table>

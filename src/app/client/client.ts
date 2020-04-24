@@ -20,4 +20,10 @@ export interface Data{
   input_time : string
 }
 
+export interface Data2{
+  temperature: string;
+  location: string;
+  recorded_at: string;
+}
+
 

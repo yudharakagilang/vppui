@@ -14,22 +14,11 @@ import { split, Observable } from "apollo-link";
 import { getMainDefinition } from "apollo-utilities";
 import { Title } from "@angular/platform-browser";
 import { ClientService } from "../client.service";
-// import io from 'socket.io-client';
 
-// const socket = io('http://localhost:3000');
-
-const subscription = gql`
-  subscription pv {
-    pyranometer(limit: 1, order_by: { input_time: desc }) {
-      message
-      input_time
-    }
-  }
-`;
-
+// Query
 const pvQuery = gql`
-  query pv {
-    pv(limit: 10) {
+  subscription pv {
+    pv(limit: 10,order_by:{input_time:desc}) {
       topic
       message
       input_time
@@ -37,8 +26,8 @@ const pvQuery = gql`
   }
 `;
 const dconQuery = gql`
-  query dcon {
-    dcon(limit: 10) {
+subscription dcon {
+    dcon(limit: 10,order_by:{input_time:desc}){
       topic
       message
       input_time
@@ -46,8 +35,8 @@ const dconQuery = gql`
   }
 `;
 const inverterQuery = gql`
-  query inverter {
-    inverter(limit: 10) {
+subscription inverter {
+    inverter(limit: 10,order_by:{input_time:desc}) {
       topic
       message
       input_time
@@ -55,8 +44,8 @@ const inverterQuery = gql`
   }
 `;
 const stateQuery = gql`
-  query state {
-    state(limit: 10) {
+subscription state {
+    state(limit: 10,order_by:{input_time:desc}) {
       topic
       message
       input_time
@@ -64,11 +53,23 @@ const stateQuery = gql`
   }
 `;
 const pyranometerQuery = gql`
-  query pyranometer {
-    pyranometer(limit: 10) {
+subscription pyranometer {
+    pyranometer(limit: 10,order_by:{input_time:desc}) {
       topic
       message
       input_time
+    }
+  }
+`;
+
+// Subscription
+
+  const subscription = gql`
+  subscription tes {
+    temperature (limit:20, order_by:{recorded_at:desc}){
+      temperature
+      location
+      recorded_at
     }
   }
 `;
@@ -95,6 +96,9 @@ export class ClientChartComponent implements OnInit, OnDestroy {
   _uri = "http://35.173.73.235:8080/v1alpha1/graphql";
   _uriWs = "ws://35.173.73.235:8080/v1alpha1/graphql";
   client$: Client;
+  dataTemperature;
+  titleTemperature;
+
 
   constructor(
     private apollo: Apollo,
@@ -173,22 +177,21 @@ export class ClientChartComponent implements OnInit, OnDestroy {
 
         //PV
         this.apollo
-          .watchQuery({
-            query: pvQuery,
-          })
-          .valueChanges.subscribe(({ data, loading,errors }) => {
+        .subscribe({
+          query: pvQuery
+        })
+        .subscribe(({ data }) => {   
             var key1 = Object.keys(data);
             this.titlePV = Object.keys(data[key1.toString()][0]);
             this.titlePV.pop("__typename");
             this.dataPV = data[key1.toString()];
-            console.log(loading)
           });
         //DCON
         this.apollo
-          .watchQuery({
-            query: dconQuery,
-          })
-          .valueChanges.subscribe(({ data, loading }) => {
+        .subscribe({
+          query: dconQuery
+        })
+        .subscribe(({ data }) => {  
             var key1 = Object.keys(data);
             this.titleDcon = Object.keys(data[key1.toString()][0]);
             this.titleDcon.pop("__typename");
@@ -197,10 +200,10 @@ export class ClientChartComponent implements OnInit, OnDestroy {
 
         //INVERTER
         this.apollo
-          .watchQuery({
-            query: inverterQuery,
-          })
-          .valueChanges.subscribe(({ data, loading }) => {
+        .subscribe({
+          query: inverterQuery
+        })
+        .subscribe(({ data }) => {  
             var key1 = Object.keys(data);
             this.titleInverter = Object.keys(data[key1.toString()][0]);
             this.titleInverter.pop("__typename");
@@ -209,10 +212,10 @@ export class ClientChartComponent implements OnInit, OnDestroy {
 
         //State
         this.apollo
-          .watchQuery({
-            query: stateQuery,
-          })
-          .valueChanges.subscribe(({ data, loading }) => {
+        .subscribe({
+          query: stateQuery
+        })
+        .subscribe(({ data }) => {  
             var key1 = Object.keys(data);
             this.titleState = Object.keys(data[key1.toString()][0]);
             this.titleState.pop("__typename");
@@ -220,17 +223,29 @@ export class ClientChartComponent implements OnInit, OnDestroy {
           });
         ///Pyranometer
         this.apollo
-          .watchQuery({
-            query: pyranometerQuery,
-          })
-          .valueChanges.subscribe(({ data, loading }) => {
+        .subscribe({
+          query: pyranometerQuery
+        })
+        .subscribe(({ data }) => {  
             var key1 = Object.keys(data);
             this.titlePyranometer = Object.keys(data[key1.toString()][0]);
             this.titlePyranometer.pop("__typename");
             this.dataPyranometer = data[key1.toString()];
           });
+
+          this.apollo
+          .subscribe({
+            query: subscription
+          })
+          .subscribe(({ data }) => {   
+            var key1 = Object.keys(data);
+            this.titleTemperature = Object.keys(data[key1.toString()][0]);
+            this.titleTemperature.pop("__typename");
+            this.dataTemperature = data[key1.toString()];
+          });
       },
       (error) => console.log("HAI")
     );
-  }
+  
+    }
 }
