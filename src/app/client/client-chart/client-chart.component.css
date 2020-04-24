@@ -1,9 +1,10 @@
-.chart-diplay{
+.chart-diplay {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 3em;
 
 }
-.container{
-  color:black
+
+.container {
+  color: black
 }
