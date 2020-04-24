@@ -39,15 +39,16 @@ export class ClientListComponent implements OnInit {
         error => this.router.navigateByUrl('/login'));
   }
 
-  addClient(name: string, location :string, url:string ): void {
+  addClient(name: string, location :string, url:string, urlHasura:string ): void {
    
     name = name.trim();
     location = location.trim();
     url = url.trim();
+    urlHasura = urlHasura.trim();
     var data='{"id":"demo@0.2.0","nodes":{}}'
     
-    if (!name || !location || !url || !data) { return; }
-    this.service.addClient({name,location,url,data} as Client)
+    if (!name || !location || !url || !data || !urlHasura) { return; }
+    this.service.addClient({name,location,url,urlHasura, data} as Client)
     .subscribe(client => {
       this.clients.push(client);
       this.showSuccess("Client data added Succesfully")

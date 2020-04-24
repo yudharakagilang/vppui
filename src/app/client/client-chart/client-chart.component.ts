@@ -198,7 +198,7 @@ ngOnInit() {
   }
 
   ngOnDestroy() {
-    // this.todoSubscription.unsubscribe();
+    this.apollo.removeClient()
   }
   getQueryResult(_query,_dataToPlace,_title){
     this.apollo.watchQuery({

@@ -3,6 +3,7 @@ export interface Client {
   name: string;
   location:string;
   url:string;
+  urlHasura:string;
   data : string;
 }
 

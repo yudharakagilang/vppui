@@ -40,6 +40,7 @@ export class ClientDetailComponent implements OnInit {
       .subscribe(
         client => {
           this.client$ = client[0];
+          console.log(this.client$.urlHasura)
           this.titleService.setTitle(this.client$.name)
           this.url = this.client$.url;
         },

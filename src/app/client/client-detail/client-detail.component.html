@@ -65,6 +65,13 @@
                       class="form-control" id="inputUrl" placeholder="Url" required>
                   </div>
                 </div>
+                 <div class="form-group row">
+                  <label for="inputUrlHasura" class="col-sm-4 col-form-label">Url Hasura</label>
+                  <div class="col-sm-8 p-0">
+                    <input [(ngModel)]="client.urlHasura" type="text"
+                      class="form-control" id="inputUrlHasura" placeholder="urlHasura" required>
+                  </div>
+                </div>
                 <div class="form-group row">
                   <div class="col-sm-10">
                     <button (click)="save(client)" type="submit" class="btn btn-success">Save</button>

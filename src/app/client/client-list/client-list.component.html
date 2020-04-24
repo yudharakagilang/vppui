@@ -33,8 +33,14 @@
                 </div>
               </div>
               <div class="form-group row">
+                <label for="inputUrlHasura" class="col-sm-2 col-form-label">Url Hasura</label>
                 <div class="col-sm-10">
-                  <button (click)="addClient(clientName.value,location.value,url.value)" type="submit"
+                  <input #urlHasura type="text" class="form-control" id="inputUrlHasura" placeholder="Url Hasura" required>
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-10">
+                  <button (click)="addClient(clientName.value,location.value,url.value,urlHasura.value)" type="submit"
                     class="btn btn-success">Add Client</button>
                 </div>
               </div>
