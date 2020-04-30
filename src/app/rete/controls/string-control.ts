@@ -41,7 +41,7 @@ export class StringControl extends Control implements AngularControl {
       change: v => this.onChange(v),
       value: 0,
       mounted: () => {
-        this.setValue(this.getData(key) as any || "Default Value")
+        this.setValue(this.getData(key) as any || "")
       },label:this.label+" : "
     };
   }

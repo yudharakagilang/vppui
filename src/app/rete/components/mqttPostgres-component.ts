@@ -45,4 +45,12 @@ export class MqttPostgresComponent extends Component implements AngularComponent
     ctrl.setValue(str);
     outputs['topic'] = node.data.topic;
   }
+
+  created(node) {
+    console.log('created', node);
+  }
+
+  destroyed(node) {
+    console.log('destroyed', node);
+  }
 }
