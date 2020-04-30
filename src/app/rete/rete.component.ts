@@ -11,6 +11,7 @@ import { MqttPubComponent } from "./components/mqttPub-component";
 import { MqttPostgresComponent } from "./components/mqttPostgres-component";
 import { MqttAddComponent } from "./components/mqttAdd-component";
 import { MqttMultiplyComponent } from "./components/mqttMultiply-component";
+import { TopicMergeComponent } from "./components/topicMerge-component";
 import { DummyDataComponent } from "./components/dummyData-component";
 import { LogicComponent } from "./components/logic-component";
 import { AngularRenderPlugin } from "rete-angular-render-plugin";
@@ -61,6 +62,7 @@ export class ReteComponent implements AfterViewInit {
       new MqttPostgresComponent(),
       new MqttAddComponent(),
       new MqttMultiplyComponent(),
+      new TopicMergeComponent()
     ];
 
     const editor = new NodeEditor("demo@0.2.0", container);
