@@ -113,8 +113,6 @@ export class ReteComponent implements AfterViewInit {
               editor.view.resize();
               editor.trigger("process");
               
-            
-              
               });
         
       } catch (error) {

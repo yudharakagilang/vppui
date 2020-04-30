@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatTabsModule} from '@angular/material/tabs'
 
+
 export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
   hostname: 'tailor.cloudmqtt.com',
   port : 12030,

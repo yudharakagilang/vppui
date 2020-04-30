@@ -14,6 +14,10 @@ import { split, Observable } from "apollo-link";
 import { getMainDefinition } from "apollo-utilities";
 import { Title } from "@angular/platform-browser";
 import { ClientService } from "../client.service";
+import * as mqttt from "mqtt";
+
+
+
 
 // Query
 const pvQuery = gql`
@@ -98,6 +102,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
   client$: Client;
   dataTemperature;
   titleTemperature;
+  client
 
 
   constructor(
@@ -105,17 +110,20 @@ export class ClientChartComponent implements OnInit, OnDestroy {
     private router: Router,
     private httpClient: HttpClient,
     private service: ClientService,
-    private titleService: Title
-  ) {}
+    private titleService: Title,){
+       
+   
+    }
+  //   // private _mqttService: MqttService
+  // ) { _mqttService.connect({username: 'xjfsxsff', password: 'K9phhM6agNJP'});}
 
   ngOnInit() {
     var parts = this.router.url.split("/");
     this.lastsegment = parts.pop() || parts.pop(); // handle potential trailing slash
-    this.getClient(this.lastsegment);
-
-    {
-    }
+    this.getClient(this.lastsegment);   
+    this.mqttConnect(); 
   }
+  
 
   ngOnDestroy() {
     this.apollo.removeClient();
@@ -141,7 +149,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
         });
 
         const subscriptionLink = new WebSocketLink({
-          uri: this._uriWs,
+          uri: this.client$.urlHasura,
 
           options: {
             reconnect: true,
@@ -247,5 +255,25 @@ export class ClientChartComponent implements OnInit, OnDestroy {
       (error) => console.log("HAI")
     );
   
+    }
+
+    sendmsg(){
+      // this.client.on('connect', function () {
+        this.client.publish('/gilang123/presence123', 'Hello mqtt',{qos:2},function (err){
+          if(!err){
+            console.log("good")
+          }
+        })
+    }
+
+    mqttConnect(){
+      this.client =  mqttt.connect({
+        host: 'tailor.cloudmqtt.com',
+        port: '32030' ,
+        username: 'xjfsxsff',
+        password: 'K9phhM6agNJP',
+        protocol:'wss'
+        
+    })
     }
 }

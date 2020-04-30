@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
-import { MqttModule, IMqttServiceOptions } from "ngx-mqtt";
 import { HttpClientModule } from '@angular/common/http';
 import { PageNotFoundComponent }   from './client/page-not-found/page-not-found.component';
 import { AppRoutingModule }        from './app-routing.module';
@@ -15,8 +14,11 @@ import { authInterceptorProviders } from './_helpers/auth.interceptor';
 import { HashLocationStrategy, LocationStrategy  } from '@angular/common';
 import { GraphQLConfigModule } from './_services/apollo.config';
 import {MatTabsModule} from '@angular/material/tabs'
+import { MqttService, MqttModule } from 'ngx-mqtt';
 
-  
+
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,7 +36,8 @@ import {MatTabsModule} from '@angular/material/tabs'
     AppRoutingModule,
     GraphQLConfigModule,
     MatTabsModule,
-    ToastrModule.forRoot() 
+    MqttModule,
+    ToastrModule.forRoot(),
   ],
   providers: [authInterceptorProviders,{provide : LocationStrategy , useClass: HashLocationStrategy}],
   bootstrap: [AppComponent]
