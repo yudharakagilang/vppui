@@ -19,9 +19,9 @@ export class MqttPubComponent extends Component {
 
     return node
           .addControl(new StringControl(this.editor, 'hostPub','Host'))
-          .addControl(new StringControl(this.editor,'passwordPub','Password'))
-          .addControl(new StringControl(this.editor,'usernamePub','Username'))
           .addControl(new NumControl(this.editor,'portPub','Port'))
+          .addControl(new StringControl(this.editor,'usernamePub','Username'))
+          .addControl(new StringControl(this.editor,'passwordPub','Password'))
           .addControl(new StringControl(this.editor,'topicPub','Topic'))
           .addControl(new StringControl(this.editor,'messagePub','Message'))
           //.addOutput(out1)

@@ -18,9 +18,9 @@ export class MqttSubComponent extends Component {
 
     return node
           .addControl(new StringControl(this.editor, 'host','Host'))
-          .addControl(new StringControl(this.editor,'password','Password'))
-          .addControl(new StringControl(this.editor,'username','Username'))
           .addControl(new NumControl(this.editor,'port','Port'))
+          .addControl(new StringControl(this.editor,'username','Username'))
+          .addControl(new StringControl(this.editor,'password','Password'))
           .addControl(new StringControl(this.editor,'topic','Topic'))
           .addOutput(out5)
   }

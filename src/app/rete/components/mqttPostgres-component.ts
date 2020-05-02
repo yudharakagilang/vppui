@@ -22,7 +22,7 @@ export class MqttPostgresComponent extends Component implements AngularComponent
     const out5 = new Output('passwordDB', 'String output socket',stringSocket);
     const out6 = new Output('usernameDB', 'String output socket',stringSocket);
     const out7 = new Output('topicStr', 'String output socket',stringSocket);
-    const out8 = new Output('alias', 'String output socket',stringSocket);
+    const out8 = new Output('column', 'String output socket',stringSocket);
     const inp1 = new Input('topic', 'Topic',stringSocket);
     
     //inp1.addControl(new StringControl(this.editor, 'topicStr', 'Topic'));
@@ -32,11 +32,11 @@ export class MqttPostgresComponent extends Component implements AngularComponent
           .addControl(new NumControl(this.editor,'portDB','Port'))
           .addControl(new StringControl(this.editor,'database','Database'))
           .addControl(new StringControl(this.editor,'table','Table'))
-          .addControl(new StringControl(this.editor,'passwordDB','Password'))
+          .addControl(new StringControl(this.editor, 'column', 'Column')) 
           .addControl(new StringControl(this.editor,'usernameDB','Username'))
+          .addControl(new StringControl(this.editor,'passwordDB','Password'))
           .addControl(new StringControl(this.editor, 'topicStr', 'Topic', true))
           .addInput(inp1)        
-          .addControl(new StringControl(this.editor, 'alias', 'Alias')) 
   }
 
   worker(node, inputs, outputs) {
