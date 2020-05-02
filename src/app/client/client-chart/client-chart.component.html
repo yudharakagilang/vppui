@@ -6,9 +6,11 @@
           data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
           Back
         </button>
+        <!--
          <button (click)="sendmsg()"class="btn btn-link" type="button">
           send
         </button>
+        -->
         <div class="row">
           <div class="col-md-12">
             <nav>
@@ -36,9 +38,11 @@
                   </thead>
                   <tbody>
                     <tr *ngFor="let data of dataPV">
-                      <td>{{data.topic}}</td>
-                      <td>{{data.message}}</td>
-                      <td>{{data.input_time}}</td>
+                      <td>{{data.voltage}}</td>
+                      <td>{{data.current}}</td>
+                      <td>{{data.power}}</td>
+                      <td>{{data.energy}}</td>
+                      <td>{{getFormattedDate(data.input_time)}}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -54,9 +58,11 @@
                   </thead>
                   <tbody>
                     <tr *ngFor="let data of dataDcon">
-                      <td>{{data.topic}}</td>
-                      <td>{{data.message}}</td>
-                      <td>{{data.input_time}}</td>
+                      <td>{{data.voltage}}</td>
+                      <td>{{data.current}}</td>
+                      <td>{{data.power}}</td>
+                      <td>{{data.energy}}</td>
+                      <td>{{getFormattedDate(data.input_time)}}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -70,9 +76,11 @@
                   </thead>
                   <tbody>
                     <tr *ngFor="let data of dataInverter">
-                      <td>{{data.topic}}</td>
-                      <td>{{data.message}}</td>
-                      <td>{{data.input_time}}</td>
+                      <td>{{data.voltage}}</td>
+                      <td>{{data.current}}</td>
+                      <td>{{data.power}}</td>
+                      <td>{{data.energy}}</td>
+                       <td>{{getFormattedDate(data.input_time)}}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -86,9 +94,12 @@
                   </thead>
                   <tbody>
                     <tr *ngFor="let data of dataState">
-                      <td>{{data.topic}}</td>
-                      <td>{{data.message}}</td>
-                      <td>{{data.input_time}}</td>
+                      <td>{{data.cb_pv}}</td>
+                      <td>{{data.cb_pln}}</td>
+                      <td>{{data.cb_fc}}</td>
+                      <td>{{data.cb_dc_load}}</td>
+                      <td>{{data.cb_ac_load}}</td>
+                      <td>{{getFormattedDate(data.input_time)}}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -102,9 +113,8 @@
                   </thead>
                   <tbody>
                     <tr *ngFor="let data of dataPyranometer">
-                      <td>{{data.topic}}</td>
-                      <td>{{data.message}}</td>
-                      <td>{{data.input_time}}</td>
+                      <td>{{data.pyranometer}}</td>
+                      <td>{{getFormattedDate(data.input_time)}}</td>
                     </tr>
                   </tbody>
                 </table>

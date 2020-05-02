@@ -23,8 +23,10 @@ import * as mqttt from "mqtt";
 const pvQuery = gql`
   subscription pv {
     pv(limit: 10,order_by:{input_time:desc}) {
-      topic
-      message
+      voltage
+      current
+      power
+      energy
       input_time
     }
   }
@@ -32,8 +34,10 @@ const pvQuery = gql`
 const dconQuery = gql`
 subscription dcon {
     dcon(limit: 10,order_by:{input_time:desc}){
-      topic
-      message
+      voltage
+      current
+      power
+      energy
       input_time
     }
   }
@@ -41,8 +45,10 @@ subscription dcon {
 const inverterQuery = gql`
 subscription inverter {
     inverter(limit: 10,order_by:{input_time:desc}) {
-      topic
-      message
+      voltage
+      current
+      power
+      energy
       input_time
     }
   }
@@ -50,8 +56,11 @@ subscription inverter {
 const stateQuery = gql`
 subscription state {
     state(limit: 10,order_by:{input_time:desc}) {
-      topic
-      message
+      cb_pv
+      cb_pln
+      cb_fc
+      cb_dc_load
+      cb_ac_load
       input_time
     }
   }
@@ -59,8 +68,7 @@ subscription state {
 const pyranometerQuery = gql`
 subscription pyranometer {
     pyranometer(limit: 10,order_by:{input_time:desc}) {
-      topic
-      message
+      pyranometer
       input_time
     }
   }
@@ -241,16 +249,16 @@ export class ClientChartComponent implements OnInit, OnDestroy {
             this.dataPyranometer = data[key1.toString()];
           });
 
-          this.apollo
-          .subscribe({
-            query: subscription
-          })
-          .subscribe(({ data }) => {   
-            var key1 = Object.keys(data);
-            this.titleTemperature = Object.keys(data[key1.toString()][0]);
-            this.titleTemperature.pop("__typename");
-            this.dataTemperature = data[key1.toString()];
-          });
+          // this.apollo
+          // .subscribe({
+          //   query: subscription
+          // })
+          // .subscribe(({ data }) => {   
+          //   var key1 = Object.keys(data);
+          //   this.titleTemperature = Object.keys(data[key1.toString()][0]);
+          //   this.titleTemperature.pop("__typename");
+          //   this.dataTemperature = data[key1.toString()];
+          // });
       },
       (error) => console.log("HAI")
     );
@@ -275,5 +283,11 @@ export class ClientChartComponent implements OnInit, OnDestroy {
         protocol:'wss'
         
     })
+    }
+
+    getFormattedDate(date : string){
+      let current_datetime = new Date(date)
+      let formatted_date = current_datetime.getFullYear() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getDate() + " " + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds() 
+      return formatted_date
     }
 }
