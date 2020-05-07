@@ -9,7 +9,7 @@ export class MqttAddComponent extends Component implements AngularComponent {
   data: AngularComponentData;
 
   constructor() {
-    super('MQTT Add');
+    super('MQTT Addition');
     this.data.render = 'angular';
     this.data.component = MyNodeComponent;
   }
