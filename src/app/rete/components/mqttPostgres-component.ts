@@ -9,7 +9,7 @@ export class MqttPostgresComponent extends Component implements AngularComponent
   data: AngularComponentData;
 
   constructor() {
-    super('MQTT PostgresDB');
+    super('MQTT DataBase');
     this.data.render = 'angular';
     this.data.component = MyNodeComponent;
   }
