@@ -12,7 +12,7 @@
       <a routerLink="/login" class="nav-link"  *ngIf="!isLoggedIn">Login</a>
     </li>
     <li class="nav-item">
-      <a routerLink="/register" class="nav-link" *ngIf="!isLoggedIn">Register</a>
+      <a routerLink="/register" class="nav-link" *ngIf="isLoggedIn">Add User</a>
     </li>
   </ul>
 </nav>

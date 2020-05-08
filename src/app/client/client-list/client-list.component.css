@@ -13,9 +13,17 @@ a{
     background:#FFF;
     border-radius:5px;
     padding:10px 10px;
-    margin:5px 0px;
+    margin:5px 5px;
     width: fit-content;
     display: table;
+}
+
+.box-part2{
+    background:#FFF;
+    border-radius:5px;
+    padding:10px 10px;
+    margin:5px 5px;
+
 }
 .container-fix{
     display: table-cell;
@@ -41,6 +49,8 @@ a{
 .form-group{
     margin-bottom: 0.5rem !important;
 }
+
+
 
 
 

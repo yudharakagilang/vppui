@@ -3,7 +3,7 @@ import { Chart } from "chart.js";
 import { Subscription } from "rxjs/internal/Subscription";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
-import { Data, Client } from "../client";
+import { Client, RootObject} from "../client";
 import { Router } from "@angular/router";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { HttpLink } from "apollo-angular-link-http";
@@ -21,56 +21,66 @@ import * as mqttt from "mqtt";
 
 // Query
 const pvQuery = gql`
-  subscription pv {
-    pv(limit: 10,order_by:{input_time:desc}) {
+subscription pv{
+	allPvs(first: 10, orderBy:INPUT_TIME_DESC){
+    nodes{
       voltage
       current
       power
       energy
-      input_time
+      inputTime
     }
   }
+}
 `;
 const dconQuery = gql`
-subscription dcon {
-    dcon(limit: 10,order_by:{input_time:desc}){
+subscription dcon{
+	allDcons(first: 10, orderBy:INPUT_TIME_DESC){
+    nodes{
       voltage
       current
       power
       energy
-      input_time
+      inputTime
     }
   }
+}
 `;
 const inverterQuery = gql`
-subscription inverter {
-    inverter(limit: 10,order_by:{input_time:desc}) {
+subscription inverter{
+	allInverters(first: 10, orderBy:INPUT_TIME_DESC){
+    nodes{
       voltage
       current
       power
       energy
-      input_time
+      inputTime
     }
   }
+}
 `;
 const stateQuery = gql`
 subscription state {
-    state(limit: 10,order_by:{input_time:desc}) {
-      cb_pv
-      cb_pln
-      cb_fc
-      cb_dc_load
-      cb_ac_load
-      input_time
+  allStates(first: 10, orderBy:INPUT_TIME_DESC){
+    nodes{
+      cbPv
+      cbPln
+      cbFc
+      cbDcLoad
+      cbAcLoad
+      inputTime
     }
+  }
   }
 `;
 const pyranometerQuery = gql`
 subscription pyranometer {
-    pyranometer(limit: 10,order_by:{input_time:desc}) {
+  allPyranometers(first: 10, orderBy:INPUT_TIME_DESC){
+    nodes{
       pyranometer
-      input_time
+      inputTime
     }
+  }
   }
 `;
 
@@ -94,23 +104,53 @@ subscription pyranometer {
 export class ClientChartComponent implements OnInit, OnDestroy {
   todoSubscription: Subscription;
 
+  respond : RootObject;
+  // PV
   titlePV;
   dataPV;
+  chartPVPower;
+  chartPVEnergy;
+  chartPVVoltage;
+  chartPVCurrent;
+
+  // DCON
   titleDcon;
   dataDcon;
+  chartDconPower;
+  chartDconEnergy;
+  chartDconVoltage;
+  chartDconCurrent;
+
+  //Inverter
   titleInverter;
   dataInverter;
+  chartInverterPower;
+  chartInverterEnergy;
+  chartInverterVoltage;
+  chartInverterCurrent;
+
+  //STATE
   titleState;
   dataState;
+
+  //Pyranommeter
   titlePyranometer;
   dataPyranometer;
+  chartPyranometer;
+  
+
   lastsegment;
   _uri = "http://35.173.73.235:8080/v1alpha1/graphql";
   _uriWs = "ws://35.173.73.235:8080/v1alpha1/graphql";
   client$: Client;
-  dataTemperature;
-  titleTemperature;
-  client
+  client;
+  voltage;
+  current;
+  energy;
+  power;
+  inputTime;
+  chartPyranometerPower: any;
+  
 
 
   constructor(
@@ -130,6 +170,493 @@ export class ClientChartComponent implements OnInit, OnDestroy {
     this.lastsegment = parts.pop() || parts.pop(); // handle potential trailing slash
     this.getClient(this.lastsegment);   
     this.mqttConnect(); 
+  
+  }
+  ngAfterViewInit(){
+    //chart PV
+    this.chartPVCurrent = new Chart('chartPVCurrent', {
+      type: 'line',
+      data: {
+        datasets: [
+          {   
+            name :"sell Price", 
+            borderColor: "#3cba9f",
+            fill: true
+          },
+          { 
+            name :"buy Price", 
+            borderColor: "#3cba",
+            fill: true
+          }
+        ]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        scales: {
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Current'
+            }
+          }],
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Time'
+            }
+          }],
+        }
+      }
+    });
+
+    this.chartPVVoltage = new Chart('chartPVVoltage', {
+      type: 'line',
+      data: {
+        datasets: [
+          {   
+            name :"sell Price", 
+            borderColor: "#3cba9f",
+            fill: true
+          },
+          { 
+            name :"buy Price", 
+            borderColor: "#3cba",
+            fill: true
+          }
+        ]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        scales: {
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Voltage'
+            }
+          }],
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Time'
+            }
+          }],
+        }
+      }
+    });
+
+    this.chartPVEnergy= new Chart('chartPVEnergy', {
+      type: 'line',
+      data: {
+        datasets: [
+          {   
+            name :"sell Price", 
+            borderColor: "#3cba9f",
+            fill: true
+          },
+          { 
+            name :"buy Price", 
+            borderColor: "#3cba",
+            fill: true
+          }
+        ]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        scales: {
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Energy'
+            }
+          }],
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Time'
+            }
+          }],
+        }
+      }
+    });
+
+    this.chartPVPower= new Chart('chartPVPower', {
+      type: 'line',
+      data: {
+        datasets: [
+          {   
+            name :"sell Price", 
+            borderColor: "#3cba9f",
+            fill: true
+          },
+          { 
+            name :"buy Price", 
+            borderColor: "#3cba",
+            fill: true
+          }
+        ]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        scales: {
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Power'
+            }
+          }],
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Time'
+            }
+          }],
+        }
+      }
+    });
+
+    //chart Dcon
+    this.chartDconCurrent = new Chart('chartDconCurrent', {
+      type: 'line',
+      data: {
+        datasets: [
+          {   
+            name :"sell Price", 
+            borderColor: "#3cba9f",
+            fill: true
+          },
+          { 
+            name :"buy Price", 
+            borderColor: "#3cba",
+            fill: true
+          }
+        ]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        scales: {
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Current'
+            }
+          }],
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Time'
+            }
+          }],
+        }
+      }
+    });
+
+    this.chartDconVoltage = new Chart('chartDconVoltage', {
+      type: 'line',
+      data: {
+        datasets: [
+          {   
+            name :"sell Price", 
+            borderColor: "#3cba9f",
+            fill: true
+          },
+          { 
+            name :"buy Price", 
+            borderColor: "#3cba",
+            fill: true
+          }
+        ]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        scales: {
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Voltage'
+            }
+          }],
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Time'
+            }
+          }],
+        }
+      }
+    });
+
+    this.chartDconEnergy= new Chart('chartDconEnergy', {
+      type: 'line',
+      data: {
+        datasets: [
+          {   
+            name :"sell Price", 
+            borderColor: "#3cba9f",
+            fill: true
+          },
+          { 
+            name :"buy Price", 
+            borderColor: "#3cba",
+            fill: true
+          }
+        ]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        scales: {
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Energy'
+            }
+          }],
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Time'
+            }
+          }],
+        }
+      }
+    });
+
+    this.chartDconPower= new Chart('chartDconPower', {
+      type: 'line',
+      data: {
+        datasets: [
+          {   
+            name :"sell Price", 
+            borderColor: "#3cba9f",
+            fill: true
+          },
+          { 
+            name :"buy Price", 
+            borderColor: "#3cba",
+            fill: true
+          }
+        ]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        scales: {
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Power'
+            }
+          }],
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Time'
+            }
+          }],
+        }
+      }
+    });
+
+    //chart Inverter
+    this.chartInverterCurrent = new Chart('chartInverterCurrent', {
+      type: 'line',
+      data: {
+        datasets: [
+          {   
+            name :"sell Price", 
+            borderColor: "#3cba9f",
+            fill: true
+          },
+          { 
+            name :"buy Price", 
+            borderColor: "#3cba",
+            fill: true
+          }
+        ]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        scales: {
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Current'
+            }
+          }],
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Time'
+            }
+          }],
+        }
+      }
+    });
+
+    this.chartInverterVoltage = new Chart('chartInverterVoltage', {
+      type: 'line',
+      data: {
+        datasets: [
+          {   
+            name :"sell Price", 
+            borderColor: "#3cba9f",
+            fill: true
+          },
+          { 
+            name :"buy Price", 
+            borderColor: "#3cba",
+            fill: true
+          }
+        ]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        scales: {
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Voltage'
+            }
+          }],
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Time'
+            }
+          }],
+        }
+      }
+    });
+
+    this.chartInverterEnergy= new Chart('chartInverterEnergy', {
+      type: 'line',
+      data: {
+        datasets: [
+          {   
+            name :"sell Price", 
+            borderColor: "#3cba9f",
+            fill: true
+          },
+          { 
+            name :"buy Price", 
+            borderColor: "#3cba",
+            fill: true
+          }
+        ]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        scales: {
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Energy'
+            }
+          }],
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Time'
+            }
+          }],
+        }
+      }
+    });
+
+    this.chartInverterPower= new Chart('chartInverterPower', {
+      type: 'line',
+      data: {
+        datasets: [
+          {   
+            name :"sell Price", 
+            borderColor: "#3cba9f",
+            fill: true
+          },
+          { 
+            name :"buy Price", 
+            borderColor: "#3cba",
+            fill: true
+          }
+        ]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        scales: {
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Power'
+            }
+          }],
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Time'
+            }
+          }],
+        }
+      }
+    });
+
+    //chart Pyranometer
+    this.chartPyranometer= new Chart('chartPyranometer', {
+      type: 'line',
+      data: {
+        datasets: [
+          {   
+            name :"sell Price", 
+            borderColor: "#3cba9f",
+            fill: true
+          },
+          { 
+            name :"buy Price", 
+            borderColor: "#3cba",
+            fill: true
+          }
+        ]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        scales: {
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Power'
+            }
+          }],
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Time'
+            }
+          }],
+        }
+      }
+    });
   }
   
 
@@ -196,22 +723,47 @@ export class ClientChartComponent implements OnInit, OnDestroy {
         .subscribe({
           query: pvQuery
         })
-        .subscribe(({ data }) => {   
-            var key1 = Object.keys(data);
-            this.titlePV = Object.keys(data[key1.toString()][0]);
-            this.titlePV.pop("__typename");
-            this.dataPV = data[key1.toString()];
+        .subscribe((data : RootObject) => {   
+          this.dataPV =data.data.allPvs.nodes
+          this.power = this.dataPV.map(node => node.power)
+          this.current = this.dataPV.map(node => node.current)
+          this.energy = this.dataPV.map(node => node.energy)
+          this.voltage = this.dataPV.map(node => node.voltage)
+          this.inputTime = this.dataPV.map(node => node.inputTime)
+          this.titlePV = Object.keys(this.dataPV[0]);
+          this.titlePV.pop("__typename");
+          this.titlePV= this.captilize(this.titlePV)
+
+          this.power = this.dataPV.map(node => node.power)
+          this.current = this.dataPV.map(node => node.current)
+          this.energy = this.dataPV.map(node => node.energy)
+          this.voltage = this.dataPV.map(node => node.voltage)
+          this.inputTime = this.dataPV.map(node => node.inputTime)
+          this.updateChartData(this.chartPVCurrent,this.current, this.inputTime)
+          this.updateChartData(this.chartPVVoltage,this.voltage, this.inputTime)
+          this.updateChartData(this.chartPVEnergy,this.energy, this.inputTime)
+          this.updateChartData(this.chartPVPower,this.power, this.inputTime)
+          
           });
         //DCON
         this.apollo
         .subscribe({
           query: dconQuery
         })
-        .subscribe(({ data }) => {  
-            var key1 = Object.keys(data);
-            this.titleDcon = Object.keys(data[key1.toString()][0]);
-            this.titleDcon.pop("__typename");
-            this.dataDcon = data[key1.toString()];
+        .subscribe((data : RootObject) => {   
+          this.dataDcon =data.data.allDcons.nodes
+          this.titleDcon = Object.keys(this.dataDcon[0]);
+          this.titleDcon.pop("__typename");
+          this.titleDcon= this.captilize(this.titleDcon)
+          this.power = this.dataDcon.map(node => node.power)
+          this.current = this.dataDcon.map(node => node.current)
+          this.energy = this.dataDcon.map(node => node.energy)
+          this.voltage = this.dataDcon.map(node => node.voltage)
+          this.inputTime = this.dataDcon.map(node => node.inputTime)
+          this.updateChartData(this.chartDconCurrent,this.current, this.inputTime)
+          this.updateChartData(this.chartDconVoltage,this.voltage, this.inputTime)
+          this.updateChartData(this.chartDconEnergy,this.energy, this.inputTime)
+          this.updateChartData(this.chartDconPower,this.power, this.inputTime)
           });
 
         //INVERTER
@@ -219,11 +771,21 @@ export class ClientChartComponent implements OnInit, OnDestroy {
         .subscribe({
           query: inverterQuery
         })
-        .subscribe(({ data }) => {  
-            var key1 = Object.keys(data);
-            this.titleInverter = Object.keys(data[key1.toString()][0]);
-            this.titleInverter.pop("__typename");
-            this.dataInverter = data[key1.toString()];
+        .subscribe((data : RootObject) => {   
+          this.dataInverter =data.data.allInverters.nodes
+          this.titleInverter = Object.keys(this.dataInverter[0]);
+          this.titleInverter.pop("__typename");
+          this.titleInverter= this.captilize(this.titleInverter)
+
+          this.power = this.dataInverter.map(node => node.power)
+          this.current = this.dataInverter.map(node => node.current)
+          this.energy = this.dataInverter.map(node => node.energy)
+          this.voltage = this.dataInverter.map(node => node.voltage)
+          this.inputTime = this.dataInverter.map(node => node.inputTime)
+          this.updateChartData(this.chartInverterCurrent,this.current, this.inputTime)
+          this.updateChartData(this.chartInverterVoltage,this.voltage, this.inputTime)
+          this.updateChartData(this.chartInverterEnergy,this.energy, this.inputTime)
+          this.updateChartData(this.chartInverterPower,this.power, this.inputTime)
           });
 
         //State
@@ -231,39 +793,34 @@ export class ClientChartComponent implements OnInit, OnDestroy {
         .subscribe({
           query: stateQuery
         })
-        .subscribe(({ data }) => {  
-            var key1 = Object.keys(data);
-            this.titleState = Object.keys(data[key1.toString()][0]);
-            this.titleState.pop("__typename");
-            this.dataState = data[key1.toString()];
+        .subscribe((data : RootObject) => {   
+          this.dataState =data.data.allStates.nodes
+          this.titleState = Object.keys(this.dataState[0]);
+          this.titleState.pop("__typename");
+          this.titleState= this.captilize(this.titleState)
           });
         ///Pyranometer
         this.apollo
         .subscribe({
           query: pyranometerQuery
         })
-        .subscribe(({ data }) => {  
-            var key1 = Object.keys(data);
-            this.titlePyranometer = Object.keys(data[key1.toString()][0]);
-            this.titlePyranometer.pop("__typename");
-            this.dataPyranometer = data[key1.toString()];
+        .subscribe((data : RootObject) => {   
+          this.dataPyranometer =data.data.allPyranometers.nodes
+          this.titlePyranometer = Object.keys(this.dataPyranometer[0]);
+          this.titlePyranometer.pop("__typename");
+          this.titlePyranometer= this.captilize(this.titlePyranometer)
+          this.irradiance = this.dataPyranometer.map(node => node.pyranometer)
+          this.inputTime = this.dataPyranometer.map(node => node.inputTime)
+          this.updateChartData(this.chartPyranometer,this.irradiance, this.inputTime)
           });
-
-          // this.apollo
-          // .subscribe({
-          //   query: subscription
-          // })
-          // .subscribe(({ data }) => {   
-          //   var key1 = Object.keys(data);
-          //   this.titleTemperature = Object.keys(data[key1.toString()][0]);
-          //   this.titleTemperature.pop("__typename");
-          //   this.dataTemperature = data[key1.toString()];
-          // });
       },
       (error) => console.log("HAI")
     );
   
     }
+  irradiance(chartPyranometer: any, irradiance: any, inputTime: any) {
+    throw new Error("Method not implemented.");
+  }
 
     sendmsg(){
       // this.client.on('connect', function () {
@@ -290,4 +847,20 @@ export class ClientChartComponent implements OnInit, OnDestroy {
       let formatted_date = current_datetime.getFullYear() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getDate() + " " + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds() 
       return formatted_date
     }
+
+     captilize(arr){
+      let result=[]
+      for(let i in arr){
+      result.push(arr[i].charAt(0).toUpperCase() + arr[i].slice(1))
+      }
+      return result}
+
+    updateChartData(chart, _data1,_label){  
+      chart.data.labels = _label;
+      chart.data.datasets[0].data = _data1;
+      // chart.data.datasets[1].data = _data2;
+      chart.update();
+    }
+
+
 }

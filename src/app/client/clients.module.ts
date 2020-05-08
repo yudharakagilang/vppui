@@ -4,6 +4,7 @@ import { FormsModule }    from '@angular/forms';
 import { ClientListComponent }    from './client-list/client-list.component';
 import { ClientDetailComponent }  from './client-detail/client-detail.component';
 import { ClientChartComponent }  from './client-chart/client-chart.component';
+import { ClientAllChartComponent }  from './client-all-chart/client-all-chart.component';
 import { ClientsRoutingModule } from './clients-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReteComponent } from '../rete/rete.component';
@@ -15,16 +16,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatTabsModule} from '@angular/material/tabs'
-
-
-export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
-  hostname: 'tailor.cloudmqtt.com',
-  port : 12030,
-  username : 'xjfsxsff',
-  password : "K9phhM6agNJP",
-  path: 'mqtt/python/test'
-
-}
   
 
 @NgModule({
@@ -40,6 +31,7 @@ export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
     ClientListComponent,
     ClientDetailComponent,
     ClientChartComponent,
+    ClientAllChartComponent,
     ReteComponent,
     NumberComponent,
     MyNodeComponent

@@ -8,35 +8,25 @@ export interface Client {
   urlHasura:string;
   data : string;
 }
-
-export interface Pv {
-
-  pv : [Data]
+export interface Node {
+  voltage: string;
+  current: string;
+  power: string;
+  energy: string;
+  inputTime: Date;
 }
 
-
-export interface Data{
-
-  voltage : string
-  current : string
-  power : string
-  energy : string
-  input_time : string
+export interface Nodes {
+  nodes: Node[];
 }
 
-export interface state {
-  cb_pv : string
-  cb_pln: string
-  cb_fc : string
-  cb_dc_load : string
-  cb_ac_load: string
-  input_time: string
+export interface Data {
+  [key:string]: Nodes;
 }
 
-export interface Data2{
-  temperature: string;
-  location: string;
-  recorded_at: string;
+export interface RootObject {
+  data: Data;
 }
+
 
 

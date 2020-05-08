@@ -22,6 +22,7 @@ import { Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { url } from 'inspector';
 import { ToastrService } from 'ngx-toastr';
+import { PriceFromHttp } from "./components/priceFromHttp-component";
 
 // import { writeFileSync, readFileSync } from 'fs';
 
@@ -55,14 +56,16 @@ export class ReteComponent implements AfterViewInit {
     const components = [
       new NumComponent(),
       new AddComponent(),
-      new GenerateNumComponent(),
+      // new GenerateNumComponent(),
       new MqttSubComponent(),
       new MqttPubComponent(),
-      new DummyDataComponent(),
+      // new DummyDataComponent(),
       new MqttPostgresComponent(),
       new MqttAddComponent(),
       new MqttMultiplyComponent(),
-      new TopicMergeComponent()
+      new TopicMergeComponent(),
+      new LogicComponent(),
+      new PriceFromHttp()
     ];
 
     const editor = new NodeEditor("demo@0.2.0", container);
@@ -109,6 +112,7 @@ export class ReteComponent implements AfterViewInit {
                   engine.process(editor.toJSON());
                   this.schema = editor.toJSON();
                   this.status = "not Saved";
+                  console.log(this.schema)
                 }) as any
               );
         
@@ -143,6 +147,7 @@ export class ReteComponent implements AfterViewInit {
     var data = this.schema;
     var parts = this.router.url.split("/");
     var lastSegment = parts.pop() || parts.pop(); // handle potential trailing slash
+    console.log(data)
     this.service.sendData(data, this.childUrl).subscribe(
       (result) => {
         this.showSuccess('Schema deployed successfuly')
