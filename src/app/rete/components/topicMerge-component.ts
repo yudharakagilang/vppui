@@ -9,7 +9,7 @@ export class TopicMergeComponent extends Component implements AngularComponent {
   data: AngularComponentData;
 
   constructor() {
-    super('Topic Merge');
+    super('Merge');
     this.data.render = 'angular';
     this.data.component = MyNodeComponent;
   }
