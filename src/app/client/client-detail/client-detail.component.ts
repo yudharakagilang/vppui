@@ -35,7 +35,7 @@ export class ClientDetailComponent implements OnInit {
     this.service.getClient(id).subscribe(
       (client) => {
         this.client$ = client[0];
-        console.log(this.client$.urlHasura);
+        console.log(this.client$.streamData);
         this.titleService.setTitle(this.client$.name);
         this.url = this.client$.url;
       },

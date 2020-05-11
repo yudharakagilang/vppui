@@ -140,8 +140,6 @@ export class ClientChartComponent implements OnInit, OnDestroy {
   
 
   lastsegment;
-  _uri = "http://35.173.73.235:8080/v1alpha1/graphql";
-  _uriWs = "ws://35.173.73.235:8080/v1alpha1/graphql";
   client$: Client;
   client;
   voltage;
@@ -680,11 +678,11 @@ export class ClientChartComponent implements OnInit, OnDestroy {
       (client) => {
         this.client$ = client[0];
         const httpLink = new HttpLink(this.httpClient).create({
-          uri: this.client$.urlHasura,
+          uri: this.client$.streamData,
         });
 
         const subscriptionLink = new WebSocketLink({
-          uri: this.client$.urlHasura,
+          uri: this.client$.streamData,
 
           options: {
             reconnect: true,
@@ -856,8 +854,8 @@ export class ClientChartComponent implements OnInit, OnDestroy {
       return result}
 
     updateChartData(chart, _data1,_label){  
-      chart.data.labels = _label;
-      chart.data.datasets[0].data = _data1;
+      chart.data.labels = _label.reverse();
+      chart.data.datasets[0].data = _data1.reverse();
       // chart.data.datasets[1].data = _data2;
       chart.update();
     }

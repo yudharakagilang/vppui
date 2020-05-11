@@ -5,7 +5,7 @@ export interface Client {
   name: string;
   location:string;
   url:string;
-  urlHasura:string;
+  streamData:string;
   data : string;
 }
 export interface Node {
