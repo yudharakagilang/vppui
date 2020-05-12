@@ -9,7 +9,7 @@ export class MqttDatabaseComponent extends Component implements AngularComponent
   data: AngularComponentData;
 
   constructor() {
-    super('MQTT DataBase');
+    super('MQTT Database');
     this.data.render = 'angular';
     this.data.component = MyNodeComponent;
   }
