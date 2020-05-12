@@ -22,7 +22,7 @@ export class MqttDatabaseComponent extends Component implements AngularComponent
     const out5 = new Output('passwordDB', 'String output socket',stringSocket);
     const out6 = new Output('usernameDB', 'String output socket',stringSocket);
     const out7 = new Output('topicStr', 'String output socket',stringSocket);
-    //const out8 = new Output('column', 'String output socket',stringSocket);
+    const out8 = new Output('column', 'String output socket',stringSocket);
     //const inp1 = new Input('topic', 'Topic',stringSocket);
     const inp1 = new Input('topicMerge1', 'Topic1', stringSocket);
     const inp2 = new Input('topicMerge2', 'Topic2', stringSocket);
@@ -36,8 +36,8 @@ export class MqttDatabaseComponent extends Component implements AngularComponent
           .addControl(new StringControl(this.editor, 'server','Server'))
           .addControl(new NumControl(this.editor,'portDB','Port'))
           .addControl(new StringControl(this.editor,'database','Database'))
-          .addControl(new StringControl(this.editor,'table','Collection'))
-          //.addControl(new StringControl(this.editor, 'column', 'Column')) 
+          .addControl(new StringControl(this.editor,'table','Table'))
+          .addControl(new StringControl(this.editor, 'column', 'Column')) 
           .addControl(new StringControl(this.editor,'usernameDB','Username'))
           .addControl(new StringControl(this.editor,'passwordDB','Password'))
           .addControl(new StringControl(this.editor, 'topicStr', 'Topic', true))
