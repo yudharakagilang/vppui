@@ -15,86 +15,122 @@ import { getMainDefinition } from "apollo-utilities";
 import { Title } from "@angular/platform-browser";
 import { ClientService } from "../client.service";
 import * as mqttt from "mqtt";
+import { __await } from 'tslib';
 
 
 
 
-// Query
-const pvQuery = gql`
+// Subscription
+const pvSubscription = gql`
 subscription pv{
-	allPvs(first: 10, orderBy:INPUT_TIME_DESC){
-    nodes{
+	pv(limit: 1,order_by:{input_time:desc}){
       voltage
       current
       power
       energy
-      inputTime
-    }
+    	input_time
+  }
+}
+`;
+const dconSubscription = gql`
+subscription dcon{
+	dcon(limit: 1,order_by:{input_time:desc}){
+      voltage
+      current
+      power
+      energy
+    	input_time
+  }
+}
+`;
+const inverterSubscription = gql`
+subscription inverter{
+	inverter(limit: 1,order_by:{input_time:desc}){
+      voltage
+      current
+      power
+      energy
+    	input_time
+  }
+}
+`;
+const stateSubscription = gql`
+subscription state{
+	state(limit: 1,order_by:{input_time:desc}){
+      cb_pv
+      cb_pln
+      cb_fc
+      cb_dc_load
+      cb_ac_load
+      input_time
+  }
+}
+`;
+const pyranometerSubscription = gql`
+subscription pyranometer{
+	pyranometer(limit: 1,order_by:{input_time:desc}){
+      pyranometer
+      input_time
+  }
+}
+`;
+
+// Query
+
+const pvQuery = gql`
+query pv{
+	pv(limit: 10,order_by:{input_time:desc}){
+      voltage
+      current
+      power
+      energy
+    	input_time
   }
 }
 `;
 const dconQuery = gql`
-subscription dcon{
-	allDcons(first: 10, orderBy:INPUT_TIME_DESC){
-    nodes{
+query dcon{
+	dcon(limit: 10,order_by:{input_time:desc}){
       voltage
       current
       power
       energy
-      inputTime
-    }
+    	input_time
   }
 }
 `;
 const inverterQuery = gql`
-subscription inverter{
-	allInverters(first: 10, orderBy:INPUT_TIME_DESC){
-    nodes{
+query inverter{
+	inverter(limit: 10,order_by:{input_time:desc}){
       voltage
       current
       power
       energy
-      inputTime
-    }
+    	input_time
   }
 }
 `;
 const stateQuery = gql`
-subscription state {
-  allStates(first: 10, orderBy:INPUT_TIME_DESC){
-    nodes{
-      cbPv
-      cbPln
-      cbFc
-      cbDcLoad
-      cbAcLoad
-      inputTime
-    }
+subscription state{
+	state(limit: 10,order_by:{input_time:desc}){
+      cb_pv
+      cb_pln
+      cb_fc
+      cb_dc_load
+      cb_ac_load
+      input_time
   }
-  }
+}
 `;
 const pyranometerQuery = gql`
-subscription pyranometer {
-  allPyranometers(first: 10, orderBy:INPUT_TIME_DESC){
-    nodes{
+query pyranometer{
+	pyranometer(limit: 10,order_by:{input_time:desc}){
       pyranometer
-      inputTime
-    }
+    	input_time
   }
-  }
+}
 `;
 
-// Subscription
-
-  const subscription = gql`
-  subscription tes {
-    temperature (limit:20, order_by:{recorded_at:desc}){
-      temperature
-      location
-      recorded_at
-    }
-  }
-`;
 
 @Component({
   selector: "app-client-chart",
@@ -146,11 +182,9 @@ export class ClientChartComponent implements OnInit, OnDestroy {
   current;
   energy;
   power;
-  inputTime;
+  input_time;
   chartPyranometerPower: any;
   
-
-
   constructor(
     private apollo: Apollo,
     private router: Router,
@@ -177,12 +211,12 @@ export class ClientChartComponent implements OnInit, OnDestroy {
       data: {
         datasets: [
           {   
-            name :"sell Price", 
+          
             borderColor: "#3cba9f",
             fill: true
           },
           { 
-            name :"buy Price", 
+          
             borderColor: "#3cba",
             fill: true
           }
@@ -194,15 +228,17 @@ export class ClientChartComponent implements OnInit, OnDestroy {
         },
         scales: {
           xAxes: [{
-            scaleLabel: {
-              display: true,
-              labelString: 'Current'
-            }
-          }],
-          yAxes: [{
+            type: 'time',
             scaleLabel: {
               display: true,
               labelString: 'Time'
+            }
+          }],
+          yAxes: [{
+            
+            scaleLabel: {
+              display: true,
+              labelString: 'Current'
             }
           }],
         }
@@ -214,12 +250,12 @@ export class ClientChartComponent implements OnInit, OnDestroy {
       data: {
         datasets: [
           {   
-            name :"sell Price", 
+          
             borderColor: "#3cba9f",
             fill: true
           },
           { 
-            name :"buy Price", 
+          
             borderColor: "#3cba",
             fill: true
           }
@@ -231,15 +267,16 @@ export class ClientChartComponent implements OnInit, OnDestroy {
         },
         scales: {
           xAxes: [{
+            type: 'time',
             scaleLabel: {
               display: true,
-              labelString: 'Voltage'
+              labelString: 'Time'
             }
           }],
           yAxes: [{
             scaleLabel: {
               display: true,
-              labelString: 'Time'
+              labelString: 'Voltage'
             }
           }],
         }
@@ -251,12 +288,12 @@ export class ClientChartComponent implements OnInit, OnDestroy {
       data: {
         datasets: [
           {   
-            name :"sell Price", 
+          
             borderColor: "#3cba9f",
             fill: true
           },
           { 
-            name :"buy Price", 
+          
             borderColor: "#3cba",
             fill: true
           }
@@ -268,15 +305,16 @@ export class ClientChartComponent implements OnInit, OnDestroy {
         },
         scales: {
           xAxes: [{
+            type: 'time',
             scaleLabel: {
               display: true,
-              labelString: 'Energy'
+              labelString: 'Time'
             }
           }],
           yAxes: [{
             scaleLabel: {
               display: true,
-              labelString: 'Time'
+              labelString: 'Energy'
             }
           }],
         }
@@ -288,12 +326,12 @@ export class ClientChartComponent implements OnInit, OnDestroy {
       data: {
         datasets: [
           {   
-            name :"sell Price", 
+          
             borderColor: "#3cba9f",
             fill: true
           },
           { 
-            name :"buy Price", 
+          
             borderColor: "#3cba",
             fill: true
           }
@@ -305,15 +343,18 @@ export class ClientChartComponent implements OnInit, OnDestroy {
         },
         scales: {
           xAxes: [{
+            type: 'time',
             scaleLabel: {
+           
+           
               display: true,
-              labelString: 'Power'
+              labelString: 'Time'
             }
           }],
           yAxes: [{
             scaleLabel: {
               display: true,
-              labelString: 'Time'
+              labelString: 'Power'
             }
           }],
         }
@@ -326,12 +367,12 @@ export class ClientChartComponent implements OnInit, OnDestroy {
       data: {
         datasets: [
           {   
-            name :"sell Price", 
+          
             borderColor: "#3cba9f",
             fill: true
           },
           { 
-            name :"buy Price", 
+          
             borderColor: "#3cba",
             fill: true
           }
@@ -343,15 +384,17 @@ export class ClientChartComponent implements OnInit, OnDestroy {
         },
         scales: {
           xAxes: [{
+            type: 'time',
             scaleLabel: {
+           
               display: true,
-              labelString: 'Current'
+              labelString: 'Time'
             }
           }],
           yAxes: [{
             scaleLabel: {
               display: true,
-              labelString: 'Time'
+              labelString: 'Current'
             }
           }],
         }
@@ -363,12 +406,12 @@ export class ClientChartComponent implements OnInit, OnDestroy {
       data: {
         datasets: [
           {   
-            name :"sell Price", 
+          
             borderColor: "#3cba9f",
             fill: true
           },
           { 
-            name :"buy Price", 
+          
             borderColor: "#3cba",
             fill: true
           }
@@ -380,15 +423,17 @@ export class ClientChartComponent implements OnInit, OnDestroy {
         },
         scales: {
           xAxes: [{
+            type: 'time',
             scaleLabel: {
+           
               display: true,
-              labelString: 'Voltage'
+              labelString: 'Time'
             }
           }],
           yAxes: [{
             scaleLabel: {
               display: true,
-              labelString: 'Time'
+              labelString: 'Voltage'
             }
           }],
         }
@@ -400,12 +445,12 @@ export class ClientChartComponent implements OnInit, OnDestroy {
       data: {
         datasets: [
           {   
-            name :"sell Price", 
+          
             borderColor: "#3cba9f",
             fill: true
           },
           { 
-            name :"buy Price", 
+          
             borderColor: "#3cba",
             fill: true
           }
@@ -417,15 +462,17 @@ export class ClientChartComponent implements OnInit, OnDestroy {
         },
         scales: {
           xAxes: [{
+            type: 'time',
             scaleLabel: {
+           
               display: true,
-              labelString: 'Energy'
+              labelString: 'Time'
             }
           }],
           yAxes: [{
             scaleLabel: {
               display: true,
-              labelString: 'Time'
+              labelString: 'Energy'
             }
           }],
         }
@@ -437,12 +484,12 @@ export class ClientChartComponent implements OnInit, OnDestroy {
       data: {
         datasets: [
           {   
-            name :"sell Price", 
+          
             borderColor: "#3cba9f",
             fill: true
           },
           { 
-            name :"buy Price", 
+          
             borderColor: "#3cba",
             fill: true
           }
@@ -454,15 +501,17 @@ export class ClientChartComponent implements OnInit, OnDestroy {
         },
         scales: {
           xAxes: [{
+            type: 'time',
             scaleLabel: {
+           
               display: true,
-              labelString: 'Power'
+              labelString: 'Time'
             }
           }],
           yAxes: [{
             scaleLabel: {
               display: true,
-              labelString: 'Time'
+              labelString: 'Power'
             }
           }],
         }
@@ -475,12 +524,12 @@ export class ClientChartComponent implements OnInit, OnDestroy {
       data: {
         datasets: [
           {   
-            name :"sell Price", 
+          
             borderColor: "#3cba9f",
             fill: true
           },
           { 
-            name :"buy Price", 
+          
             borderColor: "#3cba",
             fill: true
           }
@@ -492,15 +541,17 @@ export class ClientChartComponent implements OnInit, OnDestroy {
         },
         scales: {
           xAxes: [{
+            type: 'time',
             scaleLabel: {
+           
               display: true,
-              labelString: 'Current'
+              labelString: 'Time'
             }
           }],
           yAxes: [{
             scaleLabel: {
               display: true,
-              labelString: 'Time'
+              labelString: 'Current'
             }
           }],
         }
@@ -512,12 +563,12 @@ export class ClientChartComponent implements OnInit, OnDestroy {
       data: {
         datasets: [
           {   
-            name :"sell Price", 
+          
             borderColor: "#3cba9f",
             fill: true
           },
           { 
-            name :"buy Price", 
+          
             borderColor: "#3cba",
             fill: true
           }
@@ -529,15 +580,17 @@ export class ClientChartComponent implements OnInit, OnDestroy {
         },
         scales: {
           xAxes: [{
+            type: 'time',
             scaleLabel: {
+           
               display: true,
-              labelString: 'Voltage'
+              labelString: 'Time'
             }
           }],
           yAxes: [{
             scaleLabel: {
               display: true,
-              labelString: 'Time'
+              labelString: 'Voltage'
             }
           }],
         }
@@ -549,12 +602,12 @@ export class ClientChartComponent implements OnInit, OnDestroy {
       data: {
         datasets: [
           {   
-            name :"sell Price", 
+          
             borderColor: "#3cba9f",
             fill: true
           },
           { 
-            name :"buy Price", 
+          
             borderColor: "#3cba",
             fill: true
           }
@@ -566,15 +619,17 @@ export class ClientChartComponent implements OnInit, OnDestroy {
         },
         scales: {
           xAxes: [{
+            type: 'time',
             scaleLabel: {
+           
               display: true,
-              labelString: 'Energy'
+              labelString: 'Time'
             }
           }],
           yAxes: [{
             scaleLabel: {
               display: true,
-              labelString: 'Time'
+              labelString: 'Energy'
             }
           }],
         }
@@ -586,12 +641,12 @@ export class ClientChartComponent implements OnInit, OnDestroy {
       data: {
         datasets: [
           {   
-            name :"sell Price", 
+          
             borderColor: "#3cba9f",
             fill: true
           },
           { 
-            name :"buy Price", 
+          
             borderColor: "#3cba",
             fill: true
           }
@@ -603,15 +658,17 @@ export class ClientChartComponent implements OnInit, OnDestroy {
         },
         scales: {
           xAxes: [{
+            type: 'time',
             scaleLabel: {
+           
               display: true,
-              labelString: 'Power'
+              labelString: 'Time'
             }
           }],
           yAxes: [{
             scaleLabel: {
               display: true,
-              labelString: 'Time'
+              labelString: 'Power'
             }
           }],
         }
@@ -624,12 +681,12 @@ export class ClientChartComponent implements OnInit, OnDestroy {
       data: {
         datasets: [
           {   
-            name :"sell Price", 
+          
             borderColor: "#3cba9f",
             fill: true
           },
           { 
-            name :"buy Price", 
+          
             borderColor: "#3cba",
             fill: true
           }
@@ -641,9 +698,11 @@ export class ClientChartComponent implements OnInit, OnDestroy {
         },
         scales: {
           xAxes: [{
+            type: 'time',
             scaleLabel: {
+           
               display: true,
-              labelString: 'Power'
+              labelString: 'Irradiance'
             }
           }],
           yAxes: [{
@@ -674,30 +733,23 @@ export class ClientChartComponent implements OnInit, OnDestroy {
   }
 
   getClient(id: any) {
+    
     this.service.getClient(id).subscribe(
       (client) => {
         this.client$ = client[0];
         const httpLink = new HttpLink(this.httpClient).create({
-          uri: this.client$.streamData,
+          uri: "http://"+this.client$.streamData,
         });
 
         const subscriptionLink = new WebSocketLink({
-          uri: this.client$.streamData,
+          uri:"ws://"+this.client$.streamData,
 
           options: {
-            reconnect: true,
-            connectionParams: {
-              headers: {
-                "x-hasura-admin-secret": "mylongsecretkey",
-              },
-            },
+            reconnect: false,
           },
         });
 
         const auth = setContext((operation, context) => ({
-          headers: {
-            "x-hasura-admin-secret": "mylongsecretkey",
-          },
         }));
 
         const link = split(
@@ -717,51 +769,108 @@ export class ClientChartComponent implements OnInit, OnDestroy {
         });
 
         //PV
-        this.apollo
-        .subscribe({
-          query: pvQuery
-        })
-        .subscribe((data : RootObject) => {   
-          this.dataPV =data.data.allPvs.nodes
-          this.power = this.dataPV.map(node => node.power)
-          this.current = this.dataPV.map(node => node.current)
-          this.energy = this.dataPV.map(node => node.energy)
-          this.voltage = this.dataPV.map(node => node.voltage)
-          this.inputTime = this.dataPV.map(node => node.inputTime)
+        this.todoSubscription = this.apollo.watchQuery<any>({
+          query:pvQuery
+        }).valueChanges.subscribe((data : RootObject) => {
+          this.dataPV =data.data.pv
+          let power = this.dataPV.map(node => node.power)
+          let current = this.dataPV.map(node => node.current)
+          let energy = this.dataPV.map(node => node.energy)
+          let voltage = this.dataPV.map(node => node.voltage)
+          let input_time = this.dataPV.map(node => node.input_time)
           this.titlePV = Object.keys(this.dataPV[0]);
           this.titlePV.pop("__typename");
           this.titlePV= this.captilize(this.titlePV)
 
-          this.power = this.dataPV.map(node => node.power)
-          this.current = this.dataPV.map(node => node.current)
-          this.energy = this.dataPV.map(node => node.energy)
-          this.voltage = this.dataPV.map(node => node.voltage)
-          this.inputTime = this.dataPV.map(node => node.inputTime)
-          this.updateChartData(this.chartPVCurrent,this.current, this.inputTime)
-          this.updateChartData(this.chartPVVoltage,this.voltage, this.inputTime)
-          this.updateChartData(this.chartPVEnergy,this.energy, this.inputTime)
-          this.updateChartData(this.chartPVPower,this.power, this.inputTime)
+          this.updateChartData(this.chartPVCurrent,current, input_time)
+          this.updateChartData(this.chartPVVoltage,voltage, input_time)
+          this.updateChartData(this.chartPVEnergy,energy, input_time)
+          this.updateChartData(this.chartPVPower,power, input_time)
+            this.dataPV.shift()
+            power.shift()
+            current.shift()
+            energy.shift()
+            voltage.shift()
+            input_time.shift()
+        this.apollo
+        .subscribe({
+          query: pvSubscription
+        })
+        .subscribe((data : RootObject) => {   
+          let temp =data.data.pv
+          console.log(temp[0].power)
+          console.log(power)
+          console.log("========================================")
+          this.dataPV.pop()
+          power.pop()
+          current.pop()
+          energy.pop()
+          voltage.pop()
+          input_time.pop()
+          console.log
+          this.dataPV.unshift(temp[0])
+          power.unshift(temp[0].power)
+          current.unshift(temp[0].current)
+          energy.unshift(temp[0].energy)
+          voltage.unshift(temp[0].voltage)
+          input_time.unshift(temp[0].input_time)
+          console.log(power)
+          this.updateChartData(this.chartPVCurrent,current, input_time)
+          this.updateChartData(this.chartPVVoltage,voltage, input_time)
+          this.updateChartData(this.chartPVEnergy,energy,input_time)
+          this.updateChartData(this.chartPVPower,power, input_time)
           
           });
+
+
+        });
+        
         //DCON
         this.apollo
         .subscribe({
           query: dconQuery
         })
         .subscribe((data : RootObject) => {   
-          this.dataDcon =data.data.allDcons.nodes
+          this.dataDcon =data.data.dcon
+          let power = this.dataDcon.map(node => node.power)
+          let current = this.dataDcon.map(node => node.current)
+          let energy = this.dataDcon.map(node => node.energy)
+          let voltage = this.dataDcon.map(node => node.voltage)
+          let input_time = this.dataDcon.map(node => node.input_time)
           this.titleDcon = Object.keys(this.dataDcon[0]);
           this.titleDcon.pop("__typename");
           this.titleDcon= this.captilize(this.titleDcon)
-          this.power = this.dataDcon.map(node => node.power)
-          this.current = this.dataDcon.map(node => node.current)
-          this.energy = this.dataDcon.map(node => node.energy)
-          this.voltage = this.dataDcon.map(node => node.voltage)
-          this.inputTime = this.dataDcon.map(node => node.inputTime)
-          this.updateChartData(this.chartDconCurrent,this.current, this.inputTime)
-          this.updateChartData(this.chartDconVoltage,this.voltage, this.inputTime)
-          this.updateChartData(this.chartDconEnergy,this.energy, this.inputTime)
-          this.updateChartData(this.chartDconPower,this.power, this.inputTime)
+
+          this.updateChartData(this.chartDconCurrent,current, this.input_time)
+          this.updateChartData(this.chartDconVoltage,voltage, this.input_time)
+          this.updateChartData(this.chartDconEnergy,energy, this.input_time)
+          this.updateChartData(this.chartDconPower,power, this.input_time)
+
+          
+          this.apollo
+          .subscribe({
+            query: dconSubscription
+          })
+          .subscribe((data : RootObject) => {   
+            let temp =data.data.dcon
+            this.dataDcon.shift()
+            power.shift()
+            current.shift()
+            energy.shift()
+            voltage.shift()
+            input_time.shift()
+            this.dataDcon.unshift(temp[0])
+            power.unshift(temp[0].power)
+            current.unshift(temp[0].current)
+            energy.unshift(temp[0].energy)
+            voltage.unshift(temp[0].voltage)
+            input_time.unshift(temp[0].input_time)
+            this.updateChartData(this.chartDconCurrent,current, input_time)
+            this.updateChartData(this.chartDconVoltage,voltage, input_time)
+            this.updateChartData(this.chartDconEnergy,energy,input_time)
+            this.updateChartData(this.chartDconPower,power, input_time)
+            
+            });
           });
 
         //INVERTER
@@ -770,20 +879,47 @@ export class ClientChartComponent implements OnInit, OnDestroy {
           query: inverterQuery
         })
         .subscribe((data : RootObject) => {   
-          this.dataInverter =data.data.allInverters.nodes
+          this.dataInverter =data.data.inverter
+          let power = this.dataInverter.map(node => node.power)
+          let current = this.dataInverter.map(node => node.current)
+          let energy = this.dataInverter.map(node => node.energy)
+          let voltage = this.dataInverter.map(node => node.voltage)
+          let input_time = this.dataInverter.map(node => node.input_time)
           this.titleInverter = Object.keys(this.dataInverter[0]);
           this.titleInverter.pop("__typename");
           this.titleInverter= this.captilize(this.titleInverter)
 
-          this.power = this.dataInverter.map(node => node.power)
-          this.current = this.dataInverter.map(node => node.current)
-          this.energy = this.dataInverter.map(node => node.energy)
-          this.voltage = this.dataInverter.map(node => node.voltage)
-          this.inputTime = this.dataInverter.map(node => node.inputTime)
-          this.updateChartData(this.chartInverterCurrent,this.current, this.inputTime)
-          this.updateChartData(this.chartInverterVoltage,this.voltage, this.inputTime)
-          this.updateChartData(this.chartInverterEnergy,this.energy, this.inputTime)
-          this.updateChartData(this.chartInverterPower,this.power, this.inputTime)
+          this.updateChartData(this.chartInverterCurrent,current, this.input_time)
+          this.updateChartData(this.chartInverterVoltage,voltage, this.input_time)
+          this.updateChartData(this.chartInverterEnergy,energy, this.input_time)
+          this.updateChartData(this.chartInverterPower,power, this.input_time)
+
+
+          this.apollo
+          .subscribe({
+            query:inverterSubscription
+          })
+          .subscribe((data : RootObject) => {   
+            let temp =data.data.inverter
+            this.dataInverter.shift()
+            power.shift()
+            current.shift()
+            energy.shift()
+            voltage.shift()
+            input_time.shift()
+            this.dataInverter.unshift(temp[0])
+            power.unshift(temp[0].power)
+            current.unshift(temp[0].current)
+            energy.unshift(temp[0].energy)
+            voltage.unshift(temp[0].voltage)
+            input_time.unshift(temp[0].input_time)
+            
+            this.updateChartData(this.chartInverterCurrent,current, input_time)
+            this.updateChartData(this.chartInverterVoltage,voltage, input_time)
+            this.updateChartData(this.chartInverterEnergy,energy,input_time)
+            this.updateChartData(this.chartInverterPower,power, input_time)
+            
+            });
           });
 
         //State
@@ -792,34 +928,52 @@ export class ClientChartComponent implements OnInit, OnDestroy {
           query: stateQuery
         })
         .subscribe((data : RootObject) => {   
-          this.dataState =data.data.allStates.nodes
+          this.dataState =data.data.state
           this.titleState = Object.keys(this.dataState[0]);
           this.titleState.pop("__typename");
           this.titleState= this.captilize(this.titleState)
           });
-        ///Pyranometer
-        this.apollo
+
+
+
+       ///Pyranometer
+         this.apollo
         .subscribe({
           query: pyranometerQuery
         })
         .subscribe((data : RootObject) => {   
-          this.dataPyranometer =data.data.allPyranometers.nodes
+          this.dataPyranometer =data.data.pyranometer
+          let pyranometer = this.dataPyranometer.map(node => node.pyranometer)
+          let input_time = this.dataPyranometer.map(node => node.input_time)
           this.titlePyranometer = Object.keys(this.dataPyranometer[0]);
           this.titlePyranometer.pop("__typename");
           this.titlePyranometer= this.captilize(this.titlePyranometer)
-          this.irradiance = this.dataPyranometer.map(node => node.pyranometer)
-          this.inputTime = this.dataPyranometer.map(node => node.inputTime)
-          this.updateChartData(this.chartPyranometer,this.irradiance, this.inputTime)
+
+          this.updateChartData(this.chartPyranometer,pyranometer, this.input_time)
+
+          this.apollo
+          .subscribe({
+            query:pyranometerSubscription
+          })
+          .subscribe((data : RootObject) => {   
+            let temp =data.data.pyranometer
+            this.dataPyranometer.shift()
+            pyranometer.shift()
+            input_time.shift()
+        
+            this.dataPyranometer.unshift(temp[0])
+            pyranometer.unshift(temp[0].power)
+            input_time.unshift(temp[0].input_time)
+
+            this.updateChartData(this.chartPyranometer,pyranometer, input_time)
+            });
           });
       },
       (error) => console.log("HAI")
     );
   
     }
-  irradiance(chartPyranometer: any, irradiance: any, inputTime: any) {
-    throw new Error("Method not implemented.");
-  }
-
+ 
     sendmsg(){
       // this.client.on('connect', function () {
         this.client.publish('/gilang123/presence123', 'Hello mqtt',{qos:2},function (err){
@@ -854,8 +1008,8 @@ export class ClientChartComponent implements OnInit, OnDestroy {
       return result}
 
     updateChartData(chart, _data1,_label){  
-      chart.data.labels = _label.reverse();
-      chart.data.datasets[0].data = _data1.reverse();
+      chart.data.labels = _label;
+      chart.data.datasets[0].data = _data1
       // chart.data.datasets[1].data = _data2;
       chart.update();
     }

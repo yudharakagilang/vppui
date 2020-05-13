@@ -18,6 +18,8 @@ export class AuthInterceptor implements HttpInterceptor {
     const token = this.token.getToken();
     if (req.url.includes("/task")){
       return next.handle(req);}
+      if (req.url.includes("/graphql")){
+        return next.handle(req);}
     if (token != null) {
       // for Spring Boot back-end
       //authReq = req.clone({ headers: req.headers.set(TOKEN_HEADER_KEY, 'Bearer ' + token) });

@@ -13,7 +13,8 @@ export interface Node {
   current: string;
   power: string;
   energy: string;
-  inputTime: Date;
+  pyranometer : string;
+  input_time: Date;
 }
 
 export interface Nodes {
@@ -21,7 +22,7 @@ export interface Nodes {
 }
 
 export interface Data {
-  [key:string]: Nodes;
+  [key:string]: Node[];
 }
 
 export interface RootObject {
