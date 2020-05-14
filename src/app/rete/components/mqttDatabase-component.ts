@@ -49,11 +49,11 @@ export class MqttDatabaseComponent extends Component implements AngularComponent
   }
 
   worker(node, inputs, outputs) {
-    const a1 = inputs['topicMerge1'].length ? inputs['topicMerge1'][0] : node.data.topicMerge1;
-    const a2 = inputs['topicMerge2'].length ? inputs['topicMerge2'][0] : node.data.topicMerge2;
-    const a3 = inputs['topicMerge3'].length ? inputs['topicMerge3'][0] : node.data.topicMerge3;
-    const a4 = inputs['topicMerge4'].length ? inputs['topicMerge4'][0] : node.data.topicMerge4;
-    const a5 = inputs['topicMerge5'].length ? inputs['topicMerge5'][0] : node.data.topicMerge5;
+    const a1 = inputs['topicMerge1'].length ? inputs['topicMerge1'][0] : '';
+    const a2 = inputs['topicMerge2'].length ? inputs['topicMerge2'][0] : '';
+    const a3 = inputs['topicMerge3'].length ? inputs['topicMerge3'][0] : '';
+    const a4 = inputs['topicMerge4'].length ? inputs['topicMerge4'][0] : '';
+    const a5 = inputs['topicMerge5'].length ? inputs['topicMerge5'][0] : '';
     
     //const mergeTopic = a1.concat("+", a2.toString());
     //const mergeTopic = (!`${a1},${a2},${a3},${a4},${a5}`.match(/undefined/i)? `${a1},${a2},${a3},${a4},${a5}`: (!`${a1},${a2},${a3},${a4}`.match(/undefined/i)? `${a1},${a2},${a3},${a4}`: (!`${a1},${a2},${a3}`.match(/undefined/i)? `${a1},${a2},${a3}`: (!`${a1},${a2}`.match(/undefined/i)? `${a1},${a2}`: (a1 != 'undefined'? a1: a2)))));
