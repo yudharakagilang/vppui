@@ -107,11 +107,32 @@
     </div>
     <div class="col">
       <div class="chart-diplay box-part2 text-center shadow">
+        <h3 class="font-weight-bold">Load/Generation Power Monitoring </h3>
+        <div style="width: 100%">
+          <div class="stats">
+          <div class="row">
+          </div>
+            <div >
+              <strong>Load</strong> <a>{{loadpoweraggregate}}</a>
+            </div>
+
+            <div>
+              <strong>Power Generation</strong> <a>{{genpoweraggregate}}</a>
+            </div>
+            <div>
+              <strong>Grid Exchange</strong> <a>{{exchangeData}}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 
+      <div class="chart-diplay box-part2 text-center shadow">
         <h3 class="font-weight-bold">Price Buy/Sell </h3>
         <div style="width: 100%">
           <canvas id="line"></canvas>
         </div>
       </div>
+      -->
     </div>
   </div>
 </div>

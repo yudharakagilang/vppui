@@ -1,11 +1,45 @@
 import { Component, OnInit } from '@angular/core';
 import { Chart } from 'chart.js';
 import { ClientService }  from '../client.service';
-import { Client } from '../client';
+import { Client, RootObject } from '../client';
 import { ToastrService } from 'ngx-toastr'
 import { Router } from '@angular/router';
+import gql from 'graphql-tag';
+import { HttpLink } from 'apollo-angular-link-http';
+import { Apollo } from 'apollo-angular';
+import { HttpClient } from '@angular/common/http';
+import { WebSocketLink } from 'apollo-link-ws';
+import { split } from 'apollo-link';
+import { getMainDefinition } from "apollo-utilities";
+import { setContext } from 'apollo-link-context';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 
+const loadpoweraggregate = gql`
+subscription loadpoweraggregate{
+  loadpoweraggregate(limit:1,order_by:{time:desc})
+    {
+    load
+    },
+}
+`;
 
+const totalexchange = gql`
+subscription totalexchange{
+  totalexchange(limit:1,order_by:{time:desc})
+    {
+    power
+    },
+}
+`;
+
+const genpoweraggregate = gql`
+subscription genpoweraggregate{
+  genpoweraggregate(limit:1,order_by:{time:desc})
+    {
+    power
+    },
+}
+`;
 @Component({
   selector: 'app-client-list',
   templateUrl: './client-list.component.html',
@@ -16,109 +50,63 @@ export class ClientListComponent implements OnInit {
   selectedId : any
   newClient : Client[]
   chart: any
-  buyPrice =[
-    840,
-    840,
-    700,
-    700,
-    560,
-    560,
-    700,
-    1120,
-    1540,
-    1120,
-    700,
-    560,
-    560,
-    560,
-    560,
-    560,
-    1120,
-    1120,
-    1680,
-    2520,
-    2800,
-    2520,
-    1400,
-    840
-]
-  sellPrice=[
-    672,
-    672,
-    560,
-    560,
-    448,
-    448,
-    560,
-    896,
-    1232,
-    896,
-    560,
-    448,
-    448,
-    448,
-    448,
-    448,
-    896,
-    896,
-    1344,
-    2016,
-    2240,
-    2016,
-    1120,
-    672
-    ]
-  newTime = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]
-  
+  loadpoweraggregate
+  genpoweraggregate
+  exchangeData
+ 
+ 
 
 
   constructor(
     private service: ClientService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    private apollo: Apollo,
+    private httpClient: HttpClient,
   ) {}
 
   ngOnInit() {
     this.getClients();
+    this.getExchangeData();
 
-    // chart 1
-      this.chart = new Chart('line', {
-      type: 'line',
-      data: {
-        datasets: [
-          {   
-            name :"sell Price", 
-            borderColor: "#3cba9f",
-            fill: true
-          },
-          { 
-            name :"buy Price", 
-            borderColor: "#3cba",
-            fill: true
-          }
-        ]
-      },
-      options: {
-        legend: {
-          display: false
-        },
-        scales: {
-          xAxes: [{
-            scaleLabel: {
-              display: true,
-              labelString: 'Time in Hour'
-            }
-          }],
-          yAxes: [{
-            scaleLabel: {
-              display: true,
-              labelString: 'Price'
-            }
-          }]
-        }}
-    });
+    // // chart 1
+    //   this.chart = new Chart('line', {
+    //   type: 'line',
+    //   data: {
+    //     datasets: [
+    //       {   
+    //         name :"sell Price", 
+    //         borderColor: "#3cba9f",
+    //         fill: true
+    //       },
+    //       { 
+    //         name :"buy Price", 
+    //         borderColor: "#3cba",
+    //         fill: true
+    //       }
+    //     ]
+    //   },
+    //   options: {
+    //     legend: {
+    //       display: false
+    //     },
+    //     scales: {
+    //       xAxes: [{
+    //         scaleLabel: {
+    //           display: true,
+    //           labelString: 'Time in Hour'
+    //         }
+    //       }],
+    //       yAxes: [{
+    //         scaleLabel: {
+    //           display: true,
+    //           labelString: 'Price'
+    //         }
+    //       }]
+    //     }}
+    // });
 
-    this.updateChartData(this.chart,this.sellPrice,this.buyPrice,this.newTime)
+    // this.updateChartData(this.chart,this.sellPrice,this.buyPrice,this.newTime)
 
 
   }
@@ -184,6 +172,73 @@ export class ClientListComponent implements OnInit {
     chart.data.datasets[1].data = _data2;
     chart.update();
   }
-  
 
+  getExchangeData(){
+
+    // const for HTTP
+    const httpLink = new HttpLink(this.httpClient).create({
+      uri: "http://"+'hasuramainserver.herokuapp.com/v1/graphql',
+    });
+
+    // const for WebSocket
+    const subscriptionLink = new WebSocketLink({
+      uri: "ws://"+'hasuramainserver.herokuapp.com/v1/graphql',
+      options: {
+        reconnect: true,
+        connectionParams: {
+        },
+      },
+    });
+
+    //Auth
+    const auth = setContext((operation, context) => ({
+    }));
+
+  const link = split(
+    ({ query }) => {
+      let definition = getMainDefinition(query);
+      return (
+        definition.kind === "OperationDefinition" &&
+        definition.operation === "subscription"
+      );
+    },
+    subscriptionLink,
+    auth.concat(httpLink)
+  );
+  this.apollo.create({
+    link,
+    cache: new InMemoryCache(),
+  });
+
+  // genpower subscribe
+  this.apollo
+  .subscribe({
+    query: genpoweraggregate
+  })
+  .subscribe((data : RootObject) => {   
+    let result = data.data.genpoweraggregate[0].power;
+    this.genpoweraggregate = result
+  })
+
+  // load  subscribe
+  this.apollo
+  .subscribe({
+    query: loadpoweraggregate
+  })
+  .subscribe((data : RootObject) => {   
+    let result = data.data.loadpoweraggregate[0].load;
+    this.loadpoweraggregate = result
+  })
+
+   // load  subscribe
+   this.apollo
+   .subscribe({
+     query: totalexchange
+   })
+   .subscribe((data : RootObject) => {   
+     let result = data.data.totalexchange[0].power;
+     this.exchangeData = result
+   })
+
+}
 }

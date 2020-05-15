@@ -17,7 +17,6 @@ import { ClientService } from "../client.service";
 import * as mqttt from "mqtt";
 
 
-
 // Subscription
 const pvSubscription = gql`
 subscription pv{
