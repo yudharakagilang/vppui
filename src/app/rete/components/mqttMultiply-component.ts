@@ -41,7 +41,7 @@ export class MqttMultiplyComponent extends Component implements AngularComponent
     //const m3 = inputs['topicMul3'].length ? inputs['topicMul3'][0] : node.data.topicMul3;
     //const mulTopic = m1.concat("+", m2.toString());
     //const mulTopic = (!`${m1}x${m2}`.match(/undefined/i)? `${m1}x${m2}`: (m1 != 'undefined'? m1: m2));
-    const mulTopic = ((m1 && m2) != '' ? `${m1}x${m2}`: (m1 != '' ? m1: m2));
+    const mulTopic = ((m1 && m2) != '' ? `${m1}*${m2}`: (m1 != '' ? m1: m2));
 
     const ctrl = <StringControl> this.editor.nodes.find(n => n.id === node.id).controls.get('mixedMulTopic');
     ctrl.setValue(mulTopic);

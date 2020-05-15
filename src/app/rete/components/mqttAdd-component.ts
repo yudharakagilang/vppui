@@ -42,8 +42,8 @@ export class MqttAddComponent extends Component implements AngularComponent {
     //const sumTopic = a1.concat("+", a2.toString());
     //const sum = (!`${a1}+${a2}`.match(/undefined/i)? `${a1}+${a2}`: (a1 != 'undefined'? a1: a2));
     const sum = ((a1 && a2) != '' ? `${a1}+${a2}`: (a1 != '' ? a1: a2));
-    //const sumTopic = sum+"/"+a3;
-    const sumTopic = sum.length ? sum+"/"+a3 : "";
+    //const sumTopic = sum+":"+a3;
+    const sumTopic = sum.length ? sum+":"+a3 : "";
 
     const ctrl = <StringControl> this.editor.nodes.find(n => n.id === node.id).controls.get('mixedTopic');
     ctrl.setValue(sumTopic);
