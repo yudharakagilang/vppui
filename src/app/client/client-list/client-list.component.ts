@@ -22,7 +22,6 @@ subscription loadpoweraggregate{
     },
 }
 `;
-
 const totalexchange = gql`
 subscription totalexchange{
   totalexchange(limit:1,order_by:{time:desc})
