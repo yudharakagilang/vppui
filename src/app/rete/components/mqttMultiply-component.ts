@@ -9,7 +9,7 @@ export class MqttMultiplyComponent extends Component implements AngularComponent
   data: AngularComponentData;
 
   constructor() {
-    super('MQTT Multiply');
+    super('MQTT Multiplication');
     this.data.render = 'angular';
     this.data.component = MyNodeComponent;
   }
