@@ -110,9 +110,9 @@
         <h3 class="font-weight-bold">Load/Generation Power Monitoring </h3>
         <div style="width: 100%">
           <div class="stats">
-          <div class="row">
-          </div>
-            <div >
+            <div class="row">
+            </div>
+            <div>
               <strong>Load</strong> <a>{{loadpoweraggregate}}</a>
             </div>
 
@@ -125,14 +125,20 @@
           </div>
         </div>
       </div>
-      <!-- 
+
       <div class="chart-diplay box-part2 text-center shadow">
-        <h3 class="font-weight-bold">Price Buy/Sell </h3>
+        <select id="selectid" class="form-control-mb-12" (change)="getDateFromOption($event.target.value)">
+          <option value="1" selected="selected">Today</option>
+          <option value="2">Yesterday</option>
+          <option value="3">2 Days Ago </option>
+          <option value="4">3 Days Ago </option>
+        </select>
+        <h3 class="font-weight-bold">Generation/Load </h3>
         <div style="width: 100%">
           <canvas id="line"></canvas>
         </div>
       </div>
-      -->
+
     </div>
   </div>
 </div>

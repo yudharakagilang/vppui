@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Chart } from 'chart.js';
 import { ClientService }  from '../client.service';
-import { Client, RootObject } from '../client';
+import { Client, RootObject, Nodes } from '../client';
 import { ToastrService } from 'ngx-toastr'
 import { Router } from '@angular/router';
 import gql from 'graphql-tag';
@@ -39,6 +39,35 @@ subscription genpoweraggregate{
     },
 }
 `;
+
+const graphgen = gql`
+
+query a ($time_1: timestamp!, $time_2: timestamp!){
+  genpoweraggregate: one_hour(where: 
+   {_and: [
+     {bucket: {_gte: $time_1}}
+     {bucket: {_lte: $time_2}}
+  ]
+    
+  }) {
+    power
+    time: bucket
+  },
+  loadpoweraggregate: one_hour2(where: 
+    {_and: [
+      {bucket: {_gte: $time_1}}
+      {bucket: {_lte: $time_2}}
+   ]
+     
+   }) {
+     load
+     time: bucket
+   }
+ }
+
+`
+
+;
 @Component({
   selector: 'app-client-list',
   templateUrl: './client-list.component.html',
@@ -52,6 +81,11 @@ export class ClientListComponent implements OnInit {
   loadpoweraggregate
   genpoweraggregate
   exchangeData
+
+  result
+  result2
+  power
+  inputTime
  
  
 
@@ -66,46 +100,61 @@ export class ClientListComponent implements OnInit {
 
   ngOnInit() {
     this.getClients();
-    this.getExchangeData();
+    this.getExchangeData()
+    this.getDateFromOption("")
 
-    // // chart 1
-    //   this.chart = new Chart('line', {
-    //   type: 'line',
-    //   data: {
-    //     datasets: [
-    //       {   
-    //         name :"sell Price", 
-    //         borderColor: "#3cba9f",
-    //         fill: true
-    //       },
-    //       { 
-    //         name :"buy Price", 
-    //         borderColor: "#3cba",
-    //         fill: true
-    //       }
-    //     ]
-    //   },
-    //   options: {
-    //     legend: {
-    //       display: false
-    //     },
-    //     scales: {
-    //       xAxes: [{
-    //         scaleLabel: {
-    //           display: true,
-    //           labelString: 'Time in Hour'
-    //         }
-    //       }],
-    //       yAxes: [{
-    //         scaleLabel: {
-    //           display: true,
-    //           labelString: 'Price'
-    //         }
-    //       }]
-    //     }}
-    // });
+    // chart 1
+      this.chart = new Chart('line', {
+      type: 'line',
+      data: {
+        datasets: [
+          {   
+            label: 'Power',
+            backgroundColor: "rgba(54, 162, 235, 0.5)",
+            borderColor: 'rgba(54, 162, 235, 1)',
+            fill: true,
+            pointRadius: 0,
+            borderWidth : 1
+          },
+          { 
+            label: 'Load',
+            backgroundColor: "rgba(255, 0, 0, 0.5)",
+            borderColor: 'rgba(255, 0, 0, 1)',
+            fill: true,
+            pointRadius: 0,
+            borderWidth : 0.1
+          }
+        ]
+      },
+      options: {
+        legend: {
+          display: true
+        },
+        scales: {
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Time in Hour'
+            },
+            type: 'time',
+            time: {
+                displayFormats: {
+                    hout: 'hA'
+                }
+            }
+          },
+        
+        ],
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Power (Watt)'
+            }
+          }]
+        }}
+    });
 
-    // this.updateChartData(this.chart,this.sellPrice,this.buyPrice,this.newTime)
+    
 
 
   }
@@ -165,15 +214,15 @@ export class ClientListComponent implements OnInit {
     this.toastr.error('Error!!', 'Error Info')
   }
 
-  updateChartData(chart, _data1,_data2, _label){  
-    chart.data.labels = _label;
-    chart.data.datasets[0].data = _data1;
-    chart.data.datasets[1].data = _data2;
+  updateChartData(chart, _data1, _data2){  
+    // chart.data.labels = _label;
+    chart.data.datasets[0].data= _data1
+    chart.data.datasets[1].data= _data2
+    //chart.data.datasets[1].data = _data2;
     chart.update();
   }
 
   getExchangeData(){
-
     // const for HTTP
     const httpLink = new HttpLink(this.httpClient).create({
       uri: "http://"+'hasuramainserver.herokuapp.com/v1/graphql',
@@ -209,6 +258,8 @@ export class ClientListComponent implements OnInit {
     cache: new InMemoryCache(),
   });
 
+
+  
   // genpower subscribe
   this.apollo
   .subscribe({
@@ -239,5 +290,94 @@ export class ClientListComponent implements OnInit {
      this.exchangeData = result
    })
 
+
 }
+
+setQueryGraph(_time_1 : string, _time_2:string){
+
+  this.apollo
+  .subscribe({
+    query: graphgen,
+    variables:{time_1:_time_2, time_2:_time_1} 
+  })
+  .subscribe((data: RootObject) => { 
+   this.result = data.data.genpoweraggregate
+   this.result2 = data.data.loadpoweraggregate
+   this.result = this.renameKey(this.result)
+   this.result2 = this.renameKey2(this.result2)
+  //  this.power = this.result.map(x => x.power)
+  //  this.inputTime = this.result.map(x =>x.time)
+   console.log(this.result)
+   console.log(this.result2)
+   this.updateChartData(this.chart,this.result,this.result2)
+  })
+ 
+}
+
+getDateForGraph(_date){
+var date = _date
+var dd = String(date.getDate()).padStart(2, '0');
+var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
+var yyyy = date.getFullYear();
+var dayminone = String(date.getDate()-1).padStart(2, '0');
+return([(mm + '-' + dd + '-' + yyyy),(mm + '-' + dayminone + '-' + yyyy)]);
+}
+
+getDateFromOption(value : string){
+  console.log("hi")
+  var date = new Date()
+  let result
+  switch(value) {
+    case "1":
+        date.setDate(date.getDate()+1)
+       result = this.getDateForGraph(date)
+       this.setQueryGraph(result[0],result[1])
+       console.log(result)
+       break;
+    case "2":
+       date.setDate(date.getDate())
+       result = this.getDateForGraph(date)
+       this.setQueryGraph(result[0],result[1])
+       console.log(result)
+       break;
+    case "3":
+      date.setDate(date.getDate()-1)
+      result = this.getDateForGraph(date)
+      this.setQueryGraph(result[0],result[1])
+      break;
+    case "4":
+      date.setDate(date.getDate()-2)
+      result = this.getDateForGraph(date)
+      this.setQueryGraph(result[0],result[1])
+      break;
+    default:
+        date.setDate(date.getDate()+1)
+        result = this.getDateForGraph(date)
+        this.setQueryGraph(result[0],result[1])
+        console.log(result)
+        break;
+  }
+
+
+}
+
+ renameKey(json){
+
+  for (let i in json){
+    json[i]["y"] = json[i]["power"]
+    json[i]["x"] = json[i]["time"]
+     }
+     return json
+ }
+
+ renameKey2(json){
+
+  for (let i in json){
+    json[i]["y"] = json[i]["load"]
+    json[i]["x"] = json[i]["time"]
+     }
+     return json
+ }
+
+
 }

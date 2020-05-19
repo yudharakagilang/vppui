@@ -15,16 +15,16 @@
        <div class="col-md-12">
             <nav>
               <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                <a *ngIf="dataPV" class="nav-item nav-link active" id="nav-pv-tab" data-toggle="tab" href="#nav-pv"
-                  role="tab" aria-controls="nav-home" aria-selected="true">PV</a>
+                <a *ngIf="dataPV" class="nav-item nav-link active" id="nav-pv-tab" data-toggle="tab" href="#nav-pv" 
+                  role="tab" aria-controls="nav-home" aria-selected="true" (click)="onSelect($event.target.id)" >PV</a>
                 <a *ngIf="dataDcon" class="nav-item nav-link" id="nav-dcon-tab" data-toggle="tab" href="#nav-dcon"
-                  role="tab" aria-controls="nav-profile" aria-selected="false">DCON</a>
+                  role="tab" aria-controls="nav-profile" aria-selected="false" (click)="onSelect($event.target.id)">DCON</a>
                 <a *ngIf="dataInverter" class="nav-item nav-link" id="nav-inverter-tab" data-toggle="tab"
-                  href="#nav-inverter" role="tab" aria-controls="nav-contact" aria-selected="false">Inverter</a>
+                  href="#nav-inverter" role="tab" aria-controls="nav-contact" aria-selected="false"(click)="onSelect($event.target.id)" >Inverter</a>
                 <a *ngIf="dataState" class="nav-item nav-link" id="nav-state-tab" data-toggle="tab" href="#nav-state"
-                  role="tab" aria-controls="nav-profile" aria-selected="false">State</a>
+                  role="tab" aria-controls="nav-profile" aria-selected="false" (click)="onSelect($event.target.id)" >State</a>
                 <a *ngIf="dataPyranometer" class="nav-item nav-link" id="nav-pyranometer-tab" data-toggle="tab"
-                  href="#nav-pyranometer" role="tab" aria-controls="nav-contact" aria-selected="false">Pyranometer</a>
+                  href="#nav-pyranometer" role="tab" aria-controls="nav-contact" aria-selected="false" (click)="onSelect($event.target.id)" >Pyranometer</a>
               </div>
             </nav>
             <a *ngIf="!dataPyranometer && !dataPV && !dataState && !dataDcon && !dataInverter">No data (Make sure you
@@ -49,8 +49,8 @@
                   </tbody>
                 </table>
                 </div>
-                <div class="container">
-                  <div class="row">
+                <div [hidden] = "!dataPV" class="container">
+                  <!-- <div class="row">
                     <div class="col-sm">
                       <h3>Current</h3>
                       <div style="width: 100%">
@@ -63,20 +63,26 @@
                         <canvas id="chartPVVoltage"></canvas>
                       </div>
                     </div>
-                  </div>
+                  </div> -->
                   <div class="row">
                     <div class="col-sm">
                       <h3>Power</h3>
+                      <select id="selectid" class="form-control-mb-12" (change)="getDateFromOption($event.target.value)">
+                        <option value="1" selected="selected">Today</option>
+                        <option value="2">Yesterday</option>
+                        <option value="3">2 Days Ago </option>
+                        <option value="4">3 Days Ago </option>
+                      </select>
                       <div style="width: 100%">
                         <canvas id="chartPVPower"></canvas>
                       </div>
                     </div>
-                    <div class="col-sm">
+                    <!-- <div class="col-sm">
                       <h3>Energy</h3>
                       <div style="width: 100%">
                         <canvas id="chartPVEnergy"></canvas>
                       </div>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
               </div>
@@ -99,8 +105,8 @@
                   </tbody>
                 </table>
                 </div>
-                  <div class="container">
-                  <div class="row">
+                  <div [hidden] = "!dataDcon"class="container">
+                  <!-- <div class="row">
                     <div class="col-sm">
                       <h3>Current</h3>
                       <div style="width: 100%">
@@ -113,20 +119,26 @@
                         <canvas id="chartDconVoltage"></canvas>
                       </div>
                     </div>
-                  </div>
+                  </div> -->
                   <div class="row">
                     <div class="col-sm">
                       <h3>Power</h3>
+                      <select id="selectid" class="form-control-mb-12" (change)="getDateFromOption($event.target.value)">
+                        <option value="1" selected="selected">Today</option>
+                        <option value="2">Yesterday</option>
+                        <option value="3">2 Days Ago </option>
+                        <option value="4">3 Days Ago </option>
+                      </select>
                       <div style="width: 100%">
                         <canvas id="chartDconPower"></canvas>
                       </div>
                     </div>
-                    <div class="col-sm">
+                    <!-- <div class="col-sm">
                       <h3>Energy</h3>
                       <div style="width: 100%">
                         <canvas id="chartDconEnergy"></canvas>
                       </div>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
               </div>
@@ -149,8 +161,8 @@
                   </tbody>
                 </table>
                 </div>
-                  <div class="container">
-                  <div class="row">
+                  <div [hidden] = "!dataInverter" class="container">
+                  <!-- <div class="row">
                     <div class="col-sm">
                       <h3>Current</h3>
                       <div style="width: 100%">
@@ -163,20 +175,26 @@
                         <canvas id="chartInverterVoltage"></canvas>
                       </div>
                     </div>
-                  </div>
+                  </div> -->
                   <div class="row">
                     <div class="col-sm">
                       <h3>Power</h3>
+                      <select id="selectid" class="form-control-mb-12" (change)="getDateFromOption($event.target.value)">
+                        <option value="1" selected="selected">Today</option>
+                        <option value="2">Yesterday</option>
+                        <option value="3">2 Days Ago </option>
+                        <option value="4">3 Days Ago </option>
+                      </select>
                       <div style="width: 100%">
                         <canvas id="chartInverterPower"></canvas>
                       </div>
                     </div>
-                    <div class="col-sm">
+                    <!-- <div class="col-sm">
                       <h3>Energy</h3>
                       <div style="width: 100%">
                         <canvas id="chartInverterEnergy"></canvas>
                       </div>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
               </div>
@@ -201,7 +219,7 @@
                 </table>
                 </div>
               </div>
-              <div class="tab-pane fade" id="nav-pyranometer" role="tabpanel" aria-labelledby="nav-pyranometer-tab">
+              <!-- <div class="tab-pane fade" id="nav-pyranometer" role="tabpanel" aria-labelledby="nav-pyranometer-tab">
                  <div class ="overflow">
                 <table class="table" cellspacing="0">
                   <thead>
@@ -217,7 +235,7 @@
                   </tbody>
                 </table>
                 </div>
-                 <div class="container">
+                 <div [hidden] = "!dataPyranometer" class="container">
                   <div class="row">
                     <div class="col-sm">
                       <h3>Irradiance</h3>
@@ -227,7 +245,7 @@
                     </div>
                     </div>
                     </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
