@@ -13,6 +13,7 @@ export interface Node {
   current: string;
   power: string;
   energy: string;
+  irradiance: string;
   inputTime: Date;
 }
 
