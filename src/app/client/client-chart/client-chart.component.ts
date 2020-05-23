@@ -80,7 +80,22 @@ const fuelcellSubscription = gql`
     }
   }
 `;
-
+const batteryGenerationSubscription = gql`
+  subscription batteryGeneration {
+    export(limit: 100, order_by: { input_time: desc }) {
+      power
+      input_time
+    }
+  }
+`;
+const batteryPercentageSubscription = gql`
+  subscription batteryPercentage {
+    percentage(limit: 1, order_by: { input_time: desc }) {
+      percentage
+      input_time
+    }
+  }
+`;
 const generationSubscription = gql`
   subscription generation {
     kwh_generator(limit: 100, order_by: { input_time: desc }) {
@@ -158,6 +173,20 @@ const fuelCellEnergyQuery = gql`
   }
 `;
 
+const batteryGenerationQuery = gql`
+  query batteryGenerationQuery($time_1: timestamp!, $time_2: timestamp!) {
+    batteryExport: fifteen_minute_battery_power(
+      where: {
+        _and: [{ bucket: { _gte: $time_1 } }, { bucket: { _lte: $time_2 } }]
+      }
+    ) {
+      power
+      time: bucket
+    }
+  }
+`;
+
+
 
 
 @Component({
@@ -211,6 +240,15 @@ export class ClientChartComponent implements OnInit, OnDestroy {
    dataFuelcell;
    chartFuelcellPower;
 
+   //Battery Generation
+   titleBatteryGeneration
+   dataBatteryGeneration
+   chartBatteryPower
+
+   //Battery Percentage
+   titleBatteryPercentage
+   dataBatteryPercentage
+
   //Generator
   titleGeneration;
   dataGeneration;
@@ -230,6 +268,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
   activeTab: string = "nav-pv-tab";
   onSelect(data): void {
     this.activeTab = data;
+    console.log(this.activeTab)
   }
 
   constructor(
@@ -368,7 +407,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
     // });
 
     this.chartPVPower = new Chart("chartPVPower", {
-      type: "line",
+      type: 'line',
       data: {
         datasets: [
           {
@@ -526,7 +565,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
     // });
 
     this.chartDconPower = new Chart("chartDconPower", {
-      type: "line",
+      type: 'line',
       data: {
         datasets: [
           {
@@ -684,7 +723,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
     // });
 
     this.chartInverterPower = new Chart("chartInverterPower", {
-      type: "line",
+      type: 'line',
       data: {
         datasets: [
           {
@@ -764,7 +803,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
     // });
 
     this.chartFuelcellPower = new Chart("chartFuelcellPower", {
-      type: "line",
+      type: 'line',
       data: {
         datasets: [
           {
@@ -802,7 +841,50 @@ export class ClientChartComponent implements OnInit, OnDestroy {
         },
       },
     });
+
+    this.chartBatteryPower = new Chart("chartBatteryPower", {
+      type: 'line',
+      data: {
+        datasets: [
+          {
+            borderColor: "#3cba9f",
+            fill: true,
+          },
+          {
+            borderColor: "#3cba",
+            fill: true,
+          },
+        ],
+      },
+      options: {
+        legend: {
+          display: false,
+        },
+        scales: {
+          xAxes: [
+            {
+              type: "time",
+              scaleLabel: {
+                display: true,
+                labelString: "Time",
+              },
+            },
+          ],
+          yAxes: [
+            {
+              scaleLabel: {
+                display: true,
+                labelString: "Power",
+              },
+            },
+          ],
+        },
+      },
+    });
+
   }
+
+  
 
   ngOnDestroy() {
     this.apollo.removeClient();
@@ -891,7 +973,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
             // this.updateChartData(this.chartPVVoltage,this.voltage, this.input_time)
             // this.updateChartData(this.chartPVEnergy,this.energy, this.input_time)
             // this.updateChartData(this.chartPVPower,this.power, this.input_time)
-          }, (error) => {console.log("ha")}
+          }
           );
         //DCON
         this.apollo
@@ -1013,6 +1095,30 @@ export class ClientChartComponent implements OnInit, OnDestroy {
           this.titleFuelcell = this.captilize(this.titleFuelcell);
         });
 
+         //Battery Generation
+         this.apollo
+         .subscribe({
+           query: batteryGenerationSubscription,
+         })
+         .subscribe((data: RootObject) => {
+           this.dataBatteryGeneration = data.data.export;
+           this.titleBatteryGeneration = Object.keys(this.dataBatteryGeneration[0]);
+           this.titleBatteryGeneration.pop("__typename");
+           this.titleBatteryGeneration = this.captilize(this.titleBatteryGeneration);
+         });
+
+           //Battery percentage
+           this.apollo
+           .subscribe({
+             query: batteryPercentageSubscription,
+           })
+           .subscribe((data: RootObject) => {
+             this.dataBatteryPercentage = data.data.percentage;
+             this.titleBatteryPercentage = Object.keys(this.dataBatteryPercentage[0]);
+             this.titleBatteryPercentage.pop("__typename");
+             this.titleBatteryPercentage = this.captilize(this.titleBatteryPercentage);
+           });
+
         this.getDateFromOption("");
       },
       (error) => console.log("HAI")
@@ -1121,7 +1227,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
           //  this.inputTime = this.result.map(x =>x.time)
           console.log(this.result);
           this.updateChartData(this.chartInverterPower, this.result);
-        });
+        });}
 
         if (this.activeTab == "nav-fuelcell-tab" || this.firsttime) {
           this.apollo
@@ -1136,10 +1242,28 @@ export class ClientChartComponent implements OnInit, OnDestroy {
               //  this.inputTime = this.result.map(x =>x.time)
               console.log(this.result);
               this.updateChartData(this.chartFuelcellPower, this.result);
-            });}
+            });
+          }
+          if (this.activeTab == "nav-batteryGeneration-tab" || this.firsttime) {
+            this.apollo
+              .subscribe({
+                query: batteryGenerationQuery,
+                variables: { time_1: _time_2, time_2: _time_1 },
+              })
+              .subscribe((data: RootObject) => {
+                this.result = data.data.batteryExport;
+                this.result = this.renameKey(this.result);
+                //  this.power = this.result.map(x => x.power)
+                //  this.inputTime = this.result.map(x =>x.time)
+                console.log(this.result);
+                this.updateChartData(this.chartBatteryPower, this.result);
+              });
+            }
+    
+      
 
       this.firsttime = false;
-    }
+    
   }
 
   getDateForGraph(_date) {
@@ -1159,13 +1283,11 @@ export class ClientChartComponent implements OnInit, OnDestroy {
         date.setDate(date.getDate() + 1);
         result = this.getDateForGraph(date);
         this.setQueryGraph(result[0], result[1]);
-        console.log(result);
         break;
       case "2":
         date.setDate(date.getDate());
         result = this.getDateForGraph(date);
         this.setQueryGraph(result[0], result[1]);
-        console.log(result);
         break;
       case "3":
         date.setDate(date.getDate() - 1);
@@ -1181,7 +1303,6 @@ export class ClientChartComponent implements OnInit, OnDestroy {
         date.setDate(date.getDate() + 1);
         result = this.getDateForGraph(date);
         this.setQueryGraph(result[0], result[1]);
-        console.log(result);
         break;
     }
   }

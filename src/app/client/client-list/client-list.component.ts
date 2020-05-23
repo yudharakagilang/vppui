@@ -99,6 +99,7 @@ export class ClientListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.apollo.removeClient()
     this.getClients();
     this.getExchangeData()
     this.getDateFromOption("")
@@ -113,7 +114,7 @@ export class ClientListComponent implements OnInit {
             backgroundColor: "rgba(54, 162, 235, 0.5)",
             borderColor: 'rgba(54, 162, 235, 1)',
             fill: true,
-            pointRadius: 0,
+            pointRadius: 1,
             borderWidth : 1
           },
           { 
@@ -121,7 +122,7 @@ export class ClientListComponent implements OnInit {
             backgroundColor: "rgba(255, 0, 0, 0.5)",
             borderColor: 'rgba(255, 0, 0, 1)',
             fill: true,
-            pointRadius: 0,
+            pointRadius: 1,
             borderWidth : 0.1
           }
         ]
