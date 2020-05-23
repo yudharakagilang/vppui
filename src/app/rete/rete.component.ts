@@ -11,6 +11,8 @@ import { MqttPubComponent } from "./components/mqttPub-component";
 import { MqttDatabaseComponent } from "./components/mqttDatabase-component";
 import { MqttAddComponent } from "./components/mqttAdd-component";
 import { MqttMultiplyComponent } from "./components/mqttMultiply-component";
+import { LoadAccumulatorComponent } from "./components/loadAccumulator-component";
+import { GeneratorAccumulatorComponent } from "./components/generatorAccumulator-component";
 import { TopicMergeComponent } from "./components/topicMerge-component";
 import { DummyDataComponent } from "./components/dummyData-component";
 import { LogicComponent } from "./components/logic-component";
@@ -63,6 +65,8 @@ export class ReteComponent implements AfterViewInit {
       new MqttDatabaseComponent(),
       new MqttAddComponent(),
       new MqttMultiplyComponent(),
+      new LoadAccumulatorComponent(),
+      new GeneratorAccumulatorComponent(),
       //new TopicMergeComponent(),
       new LogicComponent(),
       new PriceFromHttp()
