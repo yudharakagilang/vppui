@@ -1,0 +1,11 @@
+<mat-sidenav-container class="example-container">
+	<mat-sidenav mode="side" opened>
+		<mat-action-list>
+				<mat-list-item [routerLink]="['']">Back</mat-list-item>
+				<mat-list-item [routerLink]="['data',lastsegment]">Data</mat-list-item>
+                <mat-list-item [routerLink]="['edit',lastsegment]">Edit</mat-list-item>
+		</mat-action-list>
+	</mat-sidenav>
+	<mat-sidenav-content><router-outlet></router-outlet></mat-sidenav-content>
+</mat-sidenav-container>
+

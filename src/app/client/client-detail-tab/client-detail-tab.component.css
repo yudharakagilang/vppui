@@ -1,0 +1,35 @@
+mat-sidenav-container
+{
+	height: 100% !important;
+	width: 100%;
+}
+
+
+mat-sidenav
+{
+	padding: 12px 24px;
+	height: 100%;
+	background-color: #f8f9fa ;
+	width: 250px;
+	color: black;
+	padding: 0;
+}
+.mat-list-base .mat-list-item {
+	color: #007bff !important;
+	color: #007bff !important;
+    background-color: white;
+    border: #e9e7e7;
+    border-bottom-style: solid;
+    border-width: thin;
+}
+
+
+mat-sidenav-content
+{
+    padding: 12px 24px;
+	background-color: rgb(221, 220, 220);
+}
+
+.ng-tns-c18-0 {
+	height: 100% !important;
+}

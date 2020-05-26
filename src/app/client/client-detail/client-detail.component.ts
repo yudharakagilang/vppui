@@ -57,8 +57,23 @@ export class ClientDetailComponent implements OnInit {
     );
   }
 
+  deleteClient ( client: Client): void {
+    console.log(client._id)
+    this.service.removeClient(client._id)
+      .subscribe(client => {
+        this.showSuccess(("Client data deleted Succesfully"))
+        this.router.navigateByUrl("/clients")
+      },
+      error =>{
+        this.showError()
+      }
+       
+      );
+  }
+
   showSuccess(message: string) {
     this.toastr.success(message, "Success Info");
+
   }
 
   showError() {

@@ -61,37 +61,39 @@
         <div class="container">
           <h2 class="font-weight-bold">Client List </h2>
           <!--BOX-->
-          <div *ngFor="let client of clients" [class.selected]="client._id === selectedId"
-            class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+          <div *ngFor="let client of clients" [class.selected]="client._id === selectedId" class="">
 
             <div class="box-part text-center shadow">
-
               <!--Content-->
-              <table class="table text-left table-borderless table-sm">
-                <tbody>
-                  <tr>
-                    <td scope="row" class="font-weight-bold">Name</td>
-                    <td>: {{client.name}}</td>
-                  </tr>
-                  <tr>
-                    <td scope="row" class="font-weight-bold">ID</td>
-                    <td>: {{client._id}}</td>
-                  </tr>
-                  <tr>
-                    <td scope="row" class="font-weight-bold">Location</td>
-                    <td>: {{client.location}}</td>
-                  </tr>
-                </tbody>
-              </table>
+              <div class="row">
+                <div class="col-8">
+                  <table class="table text-left table-borderless table-sm">
+                    <tbody>
+                      <tr>
+                        <td scope="row" class="font-weight-bold">Name</td>
+                        <td>: {{client.name}}</td>
+                      </tr>
+                      <tr>
+                        <td scope="row" class="font-weight-bold">ID</td>
+                        <td>: {{client._id}}</td>
+                      </tr>
+                      <tr>
+                        <td scope="row" class="font-weight-bold">Location</td>
+                        <td>: {{client.location}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="col-4">
+                  <a [routerLink]="['/client/data/', client._id]" class="btn btn-success a-button" href="#"
+                    role="button">See Detail</a>
+                </div>
+              </div>
+
               <div class="row">
                 <div class="col">
-                  <a [routerLink]="['/client', client._id]" class="btn btn-success a-button" href="#"
-                    role="button">Edit</a>
+                
                 </div>
-                <div class="col">
-                  <a (click)="deleteClient(client)" class="btn btn-danger a-button" role="button">Delete</a>
-                </div>
-
               </div>
 
 

@@ -3,3 +3,11 @@ nav{
     min-height: 100px;
   
 }
+
+:host {
+    height: 100%;
+  }
+
+  .height{
+    height: 100% !important;
+  }

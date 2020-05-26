@@ -193,19 +193,19 @@ export class ClientListComponent implements OnInit {
     );
   }
 
-  deleteClient ( client: Client): void {
-    this.clients = this.clients.filter(h => h !== client);
-    this.service.removeClient(client._id)
-      .subscribe(client => {
-        this.showSuccess(("Client data deleted Succesfully"))
-      },
+  // deleteClient ( client: Client): void {
+  //   this.clients = this.clients.filter(h => h !== client);
+  //   this.service.removeClient(client._id)
+  //     .subscribe(client => {
+  //       this.showSuccess(("Client data deleted Succesfully"))
+  //     },
   
-      error =>{
-        this.showError()
-      }
+  //     error =>{
+  //       this.showError()
+  //     }
        
-      );
-  }
+  //     );
+  // }
 
   showSuccess(message : string){
     this.toastr.success(message, 'Success Info');

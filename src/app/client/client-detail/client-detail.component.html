@@ -2,7 +2,7 @@
 
   <div class="d-flex" id="wrapper">
 
-    <!-- Sidebar -->
+    <!-- Sidebar
     <div class="border-right" id="sidebar-wrapper">
       <div class="sidebar-heading">Menu </div>
       <div class="list-group list-group-flush">
@@ -17,79 +17,76 @@
               </h5>
             </div>
           </div>
-          <div *ngIf="client$ as client" class="card">
-            <div class="card-header" id="headingTwo">
-              <h5 class="mb-0">
-                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse1"
-                  aria-expanded="false" aria-controls="collapseTwo">
-                  Edit Client 
-                </button>
-              </h5>
-            </div>
-            <div id="collapse1" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-              <div class="card-body">
-                <div class="form-group row">
-                  <label class="col-sm-4 col-form-label">ID</label>
-                  <div class="col-sm-8 p-0">
-                    <input [(ngModel)]="client._id" type="text" class="form-control" id="inputID" placeholder="ID"
-                      disabled />
-                  </div>
-                </div>
-
-                <div class="form-group row">
-                  <label class="col-sm-4 col-form-label">Name</label>
-                  <div class="col-sm-8 p-0">
-                    <input [(ngModel)]="client.name" type="text" class="form-control" id="inputName"
-                      placeholder="Name" />
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="inputLocation" class="col-sm-4 col-form-label">Location</label>
-                  <div class="col-sm-8 p-0">
-                    <input [(ngModel)]="client.location" type="text" class="form-control" id="inputLocation"
-                      placeholder="Location" required>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="inputUrl" class="col-sm-4 col-form-label">Url</label>
-                  <div class="col-sm-8 p-0">
-                    <input [(ngModel)]="client.url" [ngModel]='url' (ngModelChange)='onChange($event)' type="text"
-                      class="form-control" id="inputUrl" placeholder="Url" required>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="inputUrlHasura" class="col-sm-4 col-form-label">Stream Data</label>
-                  <div class="col-sm-8 p-0">
-                    <input [(ngModel)]="client.streamData" type="text" class="form-control" id="inputUrlHasura"
-                      placeholder="streamData" required>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <div class="col-sm-10">
-                    <button (click)="save(client)" type="submit" class="btn btn-success">Save</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="card-header" id="headingTwo">
-              <h5 class="mb-0">
-                <button [routerLink]="['/chart', client._id]" class="btn btn-link collapsed" type="button"
-                  data-toggle="collapse" aria-expanded="false" aria-controls="collapseTwo">
-                  Data
-                </button>
-              </h5>
-            </div>
-
-          </div>
+         
         </div>
       </div>
-    </div>
+    </div> -->
     <!-- /#sidebar-wrapper -->
 
     <!-- Page Content -->
     <div id="page-content-wrapper">
-
       <div class="container-fluid">
+          <div id="accordion">
+              <div *ngIf="client$ as client" class="card">
+                <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseTwo"
+                  aria-expanded="true" aria-controls="collapseOne">
+                  <h5 class="mb-0">
+                    <a class="btn btn-link font-weight-bold">
+                     Edit Client Data
+                    </a>
+                  </h5>
+                </div>
+    
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                    <div class="card-body">
+                        <div class="form-group row">
+                          <label class="col-sm-4 col-form-label">ID</label>
+                          <div class="col-sm-8 p-0">
+                            <input [(ngModel)]="client._id" type="text" class="form-control" id="inputID" placeholder="ID"
+                              disabled />
+                          </div>
+                        </div>
+        
+                        <div class="form-group row">
+                          <label class="col-sm-4 col-form-label">Name</label>
+                          <div class="col-sm-8 p-0">
+                            <input [(ngModel)]="client.name" type="text" class="form-control" id="inputName"
+                              placeholder="Name" />
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label for="inputLocation" class="col-sm-4 col-form-label">Location</label>
+                          <div class="col-sm-8 p-0">
+                            <input [(ngModel)]="client.location" type="text" class="form-control" id="inputLocation"
+                              placeholder="Location" required>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label for="inputUrl" class="col-sm-4 col-form-label">Url</label>
+                          <div class="col-sm-8 p-0">
+                            <input [(ngModel)]="client.url" [ngModel]='url' (ngModelChange)='onChange($event)' type="text"
+                              class="form-control" id="inputUrl" placeholder="Url" required>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label for="inputUrlHasura" class="col-sm-4 col-form-label">Stream Data</label>
+                          <div class="col-sm-8 p-0">
+                            <input [(ngModel)]="client.streamData" type="text" class="form-control" id="inputUrlHasura"
+                              placeholder="streamData" required>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <div class="col-sm-10">
+                            <button (click)="save(client)" type="submit" class="btn btn-success">Save</button>
+                            <button (click)="deleteClient(client)" type="submit" class="btn btn-danger">Delete</button>
+                          </div>
+                        </div>
+                      </div>
+            
+                </div>
+              </div>
+    
+            </div>
         <app-rete [childUrl]='url'></app-rete>
       </div>
     </div>
