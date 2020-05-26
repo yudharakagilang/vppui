@@ -159,6 +159,20 @@ export class ReteComponent implements AfterViewInit {
         this.deployStatus= "not Deployed"
       }
     );
+    data = JSON.stringify(data)
+    var parts = this.router.url.split("/");
+    var lastSegment = parts.pop() || parts.pop(); // handle potential trailing slash
+    this.service.updateClientData(data, lastSegment).subscribe(
+      () => {
+        this.status = "Saved";
+      },
+      () => {
+        this.status = "Not Saved";
+      }
+    );
+    
+
+
   }
 
   
