@@ -5,7 +5,6 @@ import ConnectionPlugin from "rete-connection-plugin";
 import ContextMenuPlugin from "rete-context-menu-plugin";
 import { NumComponent } from "./components/number-component";
 import { AddComponent } from "./components/add-component";
-import { GenerateNumComponent } from "./components/generateNum-component";
 import { MqttSubComponent } from "./components/mqttSub-component";
 import { MqttPubComponent } from "./components/mqttPub-component";
 import { MqttDatabaseComponent } from "./components/mqttDatabase-component";
@@ -13,18 +12,16 @@ import { MqttAddComponent } from "./components/mqttAdd-component";
 import { MqttMultiplyComponent } from "./components/mqttMultiply-component";
 import { LoadAccumulatorComponent } from "./components/loadAccumulator-component";
 import { GeneratorAccumulatorComponent } from "./components/generatorAccumulator-component";
-import { TopicMergeComponent } from "./components/topicMerge-component";
-import { DummyDataComponent } from "./components/dummyData-component";
+import { FuelCellComponent } from "./components/fuelCellSpec-component";
 import { LogicComponent } from "./components/logic-component";
 import { AngularRenderPlugin } from "rete-angular-render-plugin";
 import { Router } from "@angular/router";
 import { ClientService } from "../client/client.service";
 import { Client } from "../client/client";
 import { Input } from '@angular/core';
-import { Observable } from 'rxjs';
-import { url } from 'inspector';
 import { ToastrService } from 'ngx-toastr';
 import { PriceFromHttp } from "./components/priceFromHttp-component";
+import { BatterySpecComponent } from './components/batterySpec-component';
 
 // import { writeFileSync, readFileSync } from 'fs';
 
@@ -69,7 +66,8 @@ export class ReteComponent implements AfterViewInit {
       new GeneratorAccumulatorComponent(),
       //new TopicMergeComponent(),
       new LogicComponent(),
-      new PriceFromHttp()
+      new FuelCellComponent(),
+      new BatterySpecComponent()
     ];
 
     const editor = new NodeEditor("demo@0.2.0", container);
@@ -100,7 +98,7 @@ export class ReteComponent implements AfterViewInit {
       var string2 = client[0].data
          editor
             .fromJSON(JSON.parse(string2))
-              .then(()=>{editor.on("error", err => {
+              .then(()=>{editor.on("error", () => {
                 container.log("err");
               });
               editor.on(
@@ -139,10 +137,10 @@ export class ReteComponent implements AfterViewInit {
     var parts = this.router.url.split("/");
     var lastSegment = parts.pop() || parts.pop(); // handle potential trailing slash
     this.service.updateClientData(data, lastSegment).subscribe(
-      (result) => {
+      () => {
         this.status = "Saved";
       },
-      (error) => {
+      () => {
         this.status = "Not Saved";
       }
     );
@@ -150,14 +148,13 @@ export class ReteComponent implements AfterViewInit {
   deploy() {
     var data = this.schema;
     var parts = this.router.url.split("/");
-    var lastSegment = parts.pop() || parts.pop(); // handle potential trailing slash
     console.log(data)
     this.service.sendData(data, this.childUrl).subscribe(
-      (result) => {
+      () => {
         this.showSuccess('Schema deployed successfuly')
         this.deployStatus= "Deployed"
       },
-      (error) => {
+      () => {
         this.showError('Error deplyoing schema')
         this.deployStatus= "not Deployed"
       }
