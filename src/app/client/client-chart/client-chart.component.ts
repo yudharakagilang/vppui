@@ -949,12 +949,8 @@ export class ClientChartComponent implements OnInit, OnDestroy {
             this.titlePV = Object.keys(this.dataPV[0]);
             this.titlePV.pop("__typename");
             this.titlePV = this.captilize(this.titlePV);
+            this.titlePV = this.giveUnit(this.titlePV)
 
-            this.power = this.dataPV.map((node) => node.power);
-            this.current = this.dataPV.map((node) => node.current);
-            this.energy = this.dataPV.map((node) => node.energy);
-            this.voltage = this.dataPV.map((node) => node.voltage);
-            this.input_time = this.dataPV.map((node) => node.input_time);
             // this.updateChartData(this.chartPVCurrent,this.current, this.input_time)
             // this.updateChartData(this.chartPVVoltage,this.voltage, this.input_time)
             // this.updateChartData(this.chartPVEnergy,this.energy, this.input_time)
@@ -971,6 +967,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
             this.titleDcon = Object.keys(this.dataDcon[0]);
             this.titleDcon.pop("__typename");
             this.titleDcon = this.captilize(this.titleDcon);
+            this.titleDcon = this.giveUnit(this.titleDcon)
             this.power = this.dataDcon.map((node) => node.power);
             this.current = this.dataDcon.map((node) => node.current);
             this.energy = this.dataDcon.map((node) => node.energy);
@@ -992,6 +989,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
             this.titleInverter = Object.keys(this.dataInverter[0]);
             this.titleInverter.pop("__typename");
             this.titleInverter = this.captilize(this.titleInverter);
+            this.titleInverter = this.giveUnit(this.titleInverter)
 
             this.power = this.dataInverter.map((node) => node.power);
             this.current = this.dataInverter.map((node) => node.current);
@@ -1014,6 +1012,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
             this.titleState = Object.keys(this.dataState[0]);
             this.titleState.pop("__typename");
             this.titleState = this.captilize(this.titleState);
+           
           });
         // ///Pyranometer
         // this.apollo
@@ -1055,6 +1054,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
             this.titleLoad = Object.keys(this.dataLoad[0]);
             this.titleLoad.pop("__typename");
             this.titleLoad = this.captilize(this.titleLoad);
+            this.titleLoad = this.giveUnit(this.titleLoad)
           });
 
         //Generartion
@@ -1067,6 +1067,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
             this.titleGeneration = Object.keys(this.dataGeneration[0]);
             this.titleGeneration.pop("__typename");
             this.titleGeneration = this.captilize(this.titleGeneration);
+            this.titleGeneration = this.giveUnit(this.titleGeneration)
           });
 
         //Fuel cell Generartion
@@ -1079,6 +1080,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
           this.titleFuelcell = Object.keys(this.dataFuelcell[0]);
           this.titleFuelcell.pop("__typename");
           this.titleFuelcell = this.captilize(this.titleFuelcell);
+          this.titleFuelcell = this.giveUnit(this.titleFuelcell)
         });
 
          //Battery Generation
@@ -1091,6 +1093,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
            this.titleBatteryGeneration = Object.keys(this.dataBatteryGeneration[0]);
            this.titleBatteryGeneration.pop("__typename");
            this.titleBatteryGeneration = this.captilize(this.titleBatteryGeneration);
+           this.titleBatteryGeneration = this.giveUnit(this.titleBatteryGeneration)
          });
 
            //Battery percentage
@@ -1103,6 +1106,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
              this.titleBatteryPercentage = Object.keys(this.dataBatteryPercentage[0]);
              this.titleBatteryPercentage.pop("__typename");
              this.titleBatteryPercentage = this.captilize(this.titleBatteryPercentage);
+             this.titleBatteryPercentage = this.giveUnit(this.titleBatteryPercentage)
            });
 
         this.getDateFromOption("");
@@ -1304,6 +1308,35 @@ export class ClientChartComponent implements OnInit, OnDestroy {
     }
     return json;
   }
+
+
+  giveUnit(arr){
+  console.log(arr)
+  for(let i in arr){
+    if(arr[i]==('Power')){
+      arr[i]= arr[i]+' (W)'
+    }
+    else if(arr[i]==('Current')){
+      arr[i]= arr[i]+' (A)'
+    }
+    else if(arr[i]==('Voltage')){
+      arr[i]= arr[i]+' (V)'
+    }
+    else if(arr[i]==('Energy')){
+      arr[i]= arr[i]+' (Wh)'
+    }
+    else if(arr[i]==('Kwhperdate')){
+      arr[i]= arr[i]+' (KWh)'
+    }
+    else if(arr[i]==('Percentage')){
+      arr[i]= arr[i]+' (%)'
+    }
+
+  }
+   
+    return arr
+  }
+
 
   configuration(){}
 }
