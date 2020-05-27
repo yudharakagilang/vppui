@@ -1323,10 +1323,10 @@ export class ClientChartComponent implements OnInit, OnDestroy {
       arr[i]= arr[i]+' (V)'
     }
     else if(arr[i]==('Energy')){
-      arr[i]= arr[i]+' (Wh)'
+      arr[i]= arr[i]+' (KWh)'
     }
     else if(arr[i]==('Kwhperdate')){
-      arr[i]= arr[i]+' (KWh)'
+      arr[i]= 'Power per day (KWh)'
     }
     else if(arr[i]==('Percentage')){
       arr[i]= arr[i]+' (%)'
