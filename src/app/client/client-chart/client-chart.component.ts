@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Inject } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Chart } from "chart.js";
 import { Subscription } from "rxjs/internal/Subscription";
 import { Apollo } from "apollo-angular";
@@ -10,14 +10,11 @@ import { HttpLink } from "apollo-angular-link-http";
 import { HttpClient } from "@angular/common/http";
 import { WebSocketLink } from "apollo-link-ws";
 import { setContext } from "apollo-link-context";
-import { split, Observable } from "apollo-link";
+import { split } from "apollo-link";
 import { getMainDefinition } from "apollo-utilities";
 import { Title } from "@angular/platform-browser";
 import { ClientService } from "../client.service";
 import * as mqttt from "mqtt";
-import { onError } from "apollo-link-error";
-import { DOCUMENT } from '@angular/common';
-declare var $: any;
 
 
 // Subscription
@@ -66,14 +63,6 @@ const stateSubscription = gql`
     }
   }
 `;
-const pyranometerSubscription = gql`
-  subscription pyranometer {
-    pyranometer(limit: 100, order_by: { input_time: desc }) {
-      irradiance
-      input_time
-    }
-  }
-`;
 const fuelcellSubscription = gql`
   subscription fuelcell {
     fc(limit: 100, order_by: { input_time: desc }) {
@@ -116,14 +105,6 @@ const loadSubscription = gql`
   }
 `;
 
-const pvEnergy = gql`
-  subscription pvenergy {
-    last_1_day_temp(order_by: { one_min: desc }) {
-      pvgenergy
-      input_time: one_min
-    }
-  }
-`;
 const pvEnergyQuery = gql`
   query pvEnergyQuery($time_1: timestamp!, $time_2: timestamp!) {
     pv: fifteen_minute_pv_energy(
@@ -277,7 +258,6 @@ export class ClientChartComponent implements OnInit, OnDestroy {
     private router: Router,
     private httpClient: HttpClient,
     private service: ClientService,
-    private titleService: Title,
   ) {}
   //   // private _mqttService: MqttService
   // ) { _mqttService.connect({username: 'xjfsxsff', password: 'K9phhM6agNJP'});}
@@ -292,9 +272,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
   
   }
   ngAfterViewInit() {
-    $('nav-tab').bind('DOMSubtreeModified', function(){
-      console.log('changed');
-    });
+ 
     //chart PV
     // this.chartPVCurrent = new Chart('chartPVCurrent', {
     //   type: 'line',
@@ -443,7 +421,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
             {
               scaleLabel: {
                 display: true,
-                labelString: "Power",
+                labelString: "Power (Watt)",
               },
             },
           ],
@@ -601,7 +579,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
             {
               scaleLabel: {
                 display: true,
-                labelString: "Power",
+                labelString: "Power (Watt)",
               },
             },
           ],
@@ -759,7 +737,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
             {
               scaleLabel: {
                 display: true,
-                labelString: "Power",
+                labelString: "Power (Watt)",
               },
             },
           ],
@@ -839,7 +817,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
             {
               scaleLabel: {
                 display: true,
-                labelString: "Power",
+                labelString: "Power (Watt)",
               },
             },
           ],
@@ -879,7 +857,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
             {
               scaleLabel: {
                 display: true,
-                labelString: "Power",
+                labelString: "Power (Watt)",
               },
             },
           ],
@@ -903,7 +881,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
         query: _query,
         errorPolicy:'ignore'
       })
-      .valueChanges.subscribe(({ data, loading }) => {
+      .valueChanges.subscribe(({ data }) => {
         _dataToPlace = data;
         var key1 = Object.keys(data);
         _title = Object.keys(data[key1.toString()][0]);
@@ -931,7 +909,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
           },
         });
 
-        const auth = setContext((operation, context) => ({
+        const auth = setContext(() => ({
           // headers: {
           //   "x-hasura-admin-secret": "mylongsecretkey",
           // },
@@ -1129,7 +1107,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
 
         this.getDateFromOption("");
       },
-      (error) => console.log("HAI")
+      () => console.log("HAI")
     );
   }
  
@@ -1141,7 +1119,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
       { qos: 2 },
       function (err) {
         if (!err) {
-          console.log("good");
+          
         }
       }
     );
@@ -1217,7 +1195,6 @@ export class ClientChartComponent implements OnInit, OnDestroy {
           this.result = this.renameKey(this.result);
           //  this.power = this.result.map(x => x.power)
           //  this.inputTime = this.result.map(x =>x.time)
-          console.log(this.result);
           this.updateChartData(this.chartDconPower, this.result);
         });
     }
