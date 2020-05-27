@@ -32,9 +32,9 @@
                 <a *ngIf="dataBatteryPercentage" class="nav-item nav-link" id="nav-batteryPercentage-tab" data-toggle="tab"
                   href="#nav-batteryPercentage" role="tab" aria-controls="nav-contact" aria-selected="false" (click)="onSelect($event.target.id)" >Battery Percentage</a>
                   <a *ngIf="dataLoad" class="nav-item nav-link" id="nav-load-tab" data-toggle="tab"
-                  href="#nav-load" role="tab" aria-controls="nav-contact" aria-selected="false" (click)="onSelect($event.target.id)" >Load</a>
+                  href="#nav-load" role="tab" aria-controls="nav-contact" aria-selected="false" (click)="onSelect($event.target.id)" >Total Load</a>
                 <a *ngIf="dataGeneration" class="nav-item nav-link" id="nav-generation-tab" data-toggle="tab"
-                  href="#nav-generation" role="tab" aria-controls="nav-contact" aria-selected="false" (click)="onSelect($event.target.id)" >Generation</a>
+                  href="#nav-generation" role="tab" aria-controls="nav-contact" aria-selected="false" (click)="onSelect($event.target.id)" >Total Power Generation</a>
               </div>
             </nav>
             <!-- <a *ngIf="!dataPyranometer && !dataPV && !dataState && !dataDcon && !dataInverter && !dataFuelcell && !dataLoad && !dataGeneration ">No data (Make sure you
