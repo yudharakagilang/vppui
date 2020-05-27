@@ -1311,7 +1311,6 @@ export class ClientChartComponent implements OnInit, OnDestroy {
 
 
   giveUnit(arr){
-  console.log(arr)
   for(let i in arr){
     if(arr[i]==('Power')){
       arr[i]= arr[i]+' (W)'
@@ -1338,5 +1337,4 @@ export class ClientChartComponent implements OnInit, OnDestroy {
   }
 
 
-  configuration(){}
 }
