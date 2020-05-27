@@ -21,3 +21,30 @@
   overflow-y: scroll; 
   height:400px;
 }
+
+:host ::ng-deep .mat-tab-label-active {
+  border-width: 1px;
+  border-style: solid;
+  border-top-left-radius:5px;
+  border-top-right-radius:5px;
+  border-bottom: none;
+  border-color: rgb(219, 219, 219);
+  color:rgb(95, 95, 95) !important
+  
+}
+
+:host ::ng-deep .mat-tab-label{
+  color:#1c57f8 
+}
+
+:host ::ng-deep .mat-tab-labels{
+  background-color:none !important;
+  border-bottom: solid;
+  border-width: 1px;
+  border-color: rgb(219, 219, 219) !important;
+  
+}
+
+:host ::ng-deep .mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar{
+  background: rgba(255, 255, 255, 0) !important;
+} 

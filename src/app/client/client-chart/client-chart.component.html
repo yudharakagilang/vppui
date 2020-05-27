@@ -14,8 +14,8 @@
         <div class="row">
        <div class="col-md-12">
             <nav>
-              <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                <a *ngIf="dataPV" class="nav-item nav-link active" id="nav-pv-tab" data-toggle="tab" href="#nav-pv" 
+              <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist" (click)="onSelect($event.target)">
+                <a *ngIf="dataPV" class="nav-item nav-link" id="nav-pv-tab" data-toggle="tab" href="#nav-pv" 
                   role="tab" aria-controls="nav-home" aria-selected="true" (click)="onSelect($event.target.id)" >PV</a>
                 <a *ngIf="dataDcon" class="nav-item nav-link" id="nav-dcon-tab" data-toggle="tab" href="#nav-dcon"
                   role="tab" aria-controls="nav-profile" aria-selected="false" (click)="onSelect($event.target.id)">DCON</a>

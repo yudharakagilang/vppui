@@ -38,7 +38,7 @@
     "dotenv": "^8.2.0",
     "graphql": "^14.6.0",
     "graphql-tag": "^2.10.3",
-    "jquery": "3.4.1",
+    "jquery": "^3.4.1",
     "lite-server": "^2.5.4",
     "mqtt": "^4.0.0",
     "ng2-mqtt": "^0.1.2",

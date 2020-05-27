@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, Inject } from "@angular/core";
 import { Chart } from "chart.js";
 import { Subscription } from "rxjs/internal/Subscription";
 import { Apollo } from "apollo-angular";
@@ -16,6 +16,8 @@ import { Title } from "@angular/platform-browser";
 import { ClientService } from "../client.service";
 import * as mqttt from "mqtt";
 import { onError } from "apollo-link-error";
+import { DOCUMENT } from '@angular/common';
+declare var $: any;
 
 
 // Subscription
@@ -268,7 +270,6 @@ export class ClientChartComponent implements OnInit, OnDestroy {
   activeTab: string = "nav-pv-tab";
   onSelect(data): void {
     this.activeTab = data;
-    console.log(this.activeTab)
   }
 
   constructor(
@@ -276,20 +277,24 @@ export class ClientChartComponent implements OnInit, OnDestroy {
     private router: Router,
     private httpClient: HttpClient,
     private service: ClientService,
-    private titleService: Title
+    private titleService: Title,
   ) {}
   //   // private _mqttService: MqttService
   // ) { _mqttService.connect({username: 'xjfsxsff', password: 'K9phhM6agNJP'});}
 
   ngOnInit() {
+    
     this.apollo.removeClient()
     var parts = this.router.url.split("/");
     this.lastsegment = parts.pop() || parts.pop(); // handle potential trailing slash
     this.getClient(this.lastsegment);
-
     this.mqttConnect();
+  
   }
   ngAfterViewInit() {
+    $('nav-tab').bind('DOMSubtreeModified', function(){
+      console.log('changed');
+    });
     //chart PV
     // this.chartPVCurrent = new Chart('chartPVCurrent', {
     //   type: 'line',
@@ -889,6 +894,9 @@ export class ClientChartComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.apollo.removeClient();
   }
+
+
+  
   getQueryResult(_query, _dataToPlace, _title) {
     this.apollo
       .watchQuery({
@@ -1225,7 +1233,6 @@ export class ClientChartComponent implements OnInit, OnDestroy {
           this.result = this.renameKey(this.result);
           //  this.power = this.result.map(x => x.power)
           //  this.inputTime = this.result.map(x =>x.time)
-          console.log(this.result);
           this.updateChartData(this.chartInverterPower, this.result);
         });}
 
@@ -1240,7 +1247,6 @@ export class ClientChartComponent implements OnInit, OnDestroy {
               this.result = this.renameKey(this.result);
               //  this.power = this.result.map(x => x.power)
               //  this.inputTime = this.result.map(x =>x.time)
-              console.log(this.result);
               this.updateChartData(this.chartFuelcellPower, this.result);
             });
           }
@@ -1255,7 +1261,6 @@ export class ClientChartComponent implements OnInit, OnDestroy {
                 this.result = this.renameKey(this.result);
                 //  this.power = this.result.map(x => x.power)
                 //  this.inputTime = this.result.map(x =>x.time)
-                console.log(this.result);
                 this.updateChartData(this.chartBatteryPower, this.result);
               });
             }
