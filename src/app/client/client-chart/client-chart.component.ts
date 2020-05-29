@@ -892,6 +892,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
     this.service.getClient(id).subscribe(
       (client) => {
         this.client$ = client[0];
+        console.log(this.client$)
         const httpLink = new HttpLink(this.httpClient).create({
           uri: "http://" + this.client$.streamData,
         });

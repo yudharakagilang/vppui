@@ -38,7 +38,7 @@ export class ClientService {
   }
 
   updateClient(data :Client){
-    return this.http.put<Client>(this.baseUrl+'update/'+data._id,data,httpOptions)
+    return this.http.put<Client>(this.baseUrl+'update/'+data.id,data,httpOptions)
   }
   updateClientData(data :any, id : String){
     return this.http.put(this.baseUrl+'updateData/'+id,data,httpOptions)

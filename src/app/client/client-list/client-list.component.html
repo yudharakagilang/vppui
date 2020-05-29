@@ -61,7 +61,7 @@
         <div class="container">
           <h2 class="font-weight-bold">Client List </h2>
           <!--BOX-->
-          <div *ngFor="let client of clients" [class.selected]="client._id === selectedId" class="">
+          <div *ngFor="let client of clients" [class.selected]="client.id === selectedId" class="">
 
             <div class="box-part text-center shadow">
               <!--Content-->
@@ -75,7 +75,7 @@
                       </tr>
                       <tr>
                         <td scope="row" class="font-weight-bold">ID</td>
-                        <td>: {{client._id}}</td>
+                        <td>: {{client.id}}</td>
                       </tr>
                       <tr>
                         <td scope="row" class="font-weight-bold">Location</td>
@@ -85,7 +85,7 @@
                   </table>
                 </div>
                 <div class="col-4">
-                  <a [routerLink]="['/client/data/', client._id]" class="btn btn-success a-button" href="#"
+                  <a [routerLink]="['/client/data/', client.id]" class="btn btn-success a-button" href="#"
                     role="button">See Detail</a>
                 </div>
               </div>

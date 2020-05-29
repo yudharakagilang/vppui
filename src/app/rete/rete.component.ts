@@ -134,6 +134,7 @@ export class ReteComponent implements AfterViewInit {
   save() {
     var data = this.schema;
     data = JSON.stringify(data)
+    console.log(data)
     var parts = this.router.url.split("/");
     var lastSegment = parts.pop() || parts.pop(); // handle potential trailing slash
     this.service.updateClientData(data, lastSegment).subscribe(

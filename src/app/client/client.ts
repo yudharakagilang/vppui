@@ -1,7 +1,7 @@
 import { Timestamp } from 'rxjs/internal/operators/timestamp';
 
 export interface Client {
-  _id: string;
+  id: string;
   name: string;
   location:string;
   url:string;

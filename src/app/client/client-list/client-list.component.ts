@@ -195,7 +195,7 @@ export class ClientListComponent implements OnInit {
 
   // deleteClient ( client: Client): void {
   //   this.clients = this.clients.filter(h => h !== client);
-  //   this.service.removeClient(client._id)
+  //   this.service.removeClient(client.id)
   //     .subscribe(client => {
   //       this.showSuccess(("Client data deleted Succesfully"))
   //     },
