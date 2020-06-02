@@ -254,12 +254,12 @@ export class ClientListComponent implements OnInit {
   getExchangeData(){
     // const for HTTP
     const httpLink = new HttpLink(this.httpClient).create({
-      uri: "http://"+'hasuramainserver.herokuapp.com/v1/graphql',
+      uri: "https://"+'hasuramainserver.herokuapp.com/v1/graphql',
     });
 
     // const for WebSocket
     const subscriptionLink = new WebSocketLink({
-      uri: "ws://"+'hasuramainserver.herokuapp.com/v1/graphql',
+      uri: "wss://"+'hasuramainserver.herokuapp.com/v1/graphql',
       options: {
         reconnect: true,
         connectionParams: {

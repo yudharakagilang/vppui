@@ -894,11 +894,11 @@ export class ClientChartComponent implements OnInit, OnDestroy {
         this.client$ = client[0];
         console.log(this.client$)
         const httpLink = new HttpLink(this.httpClient).create({
-          uri: "http://" + this.client$.streamData,
+          uri: "https://" + this.client$.streamData,
         });
 
         const subscriptionLink = new WebSocketLink({
-          uri: "ws://" + this.client$.streamData,
+          uri: "wss://" + this.client$.streamData,
 
           options: {
             reconnect: true,
