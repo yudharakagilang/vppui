@@ -69,7 +69,8 @@ export class ClientDetailComponent implements OnInit {
         error => {})
   }
 
-  save(client: Client) {
+  save(client: Client, nrSelect) {
+    client.userid = nrSelect
     this.service.updateClient(client).subscribe(
       (client) => {
         this.client$ = client;
