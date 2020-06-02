@@ -7,6 +7,12 @@ export interface Client {
   url:string;
   streamData:string;
   data : string;
+  userid: number;
+}
+
+export interface User {
+ username: string;
+ id: number;
 }
 export interface Node {
   voltage: string;

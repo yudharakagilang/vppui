@@ -11,3 +11,10 @@ nav{
   .height{
     height: 100% !important;
   }
+
+  .user{
+    font-size: 20px;
+  }
+  .role{
+    font-size: 10px;
+  }

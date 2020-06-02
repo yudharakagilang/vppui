@@ -1,4 +1,4 @@
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpHandler, HttpRequest } from '@angular/common/http';
 
@@ -19,10 +19,6 @@ export class AuthInterceptor implements HttpInterceptor {
     if (req.url.includes("/task")){
       return next.handle(req);}
     if (token != null) {
-      // for Spring Boot back-end
-      //authReq = req.clone({ headers: req.headers.set(TOKEN_HEADER_KEY, 'Bearer ' + token) });
-
-      // for Node.js Express back-end
       authReq = req.clone({ headers: req.headers.set(TOKEN_HEADER_KEY, token) });
     }
     return next.handle(authReq);

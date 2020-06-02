@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Client } from './client';
+import { Client,User } from './client';
 import { tap, catchError } from 'rxjs/operators';
 import { environment } from '../_services/url.service';
 
@@ -29,14 +29,17 @@ export class ClientService {
     private http: HttpClient
   ) {}
 
+
+  getAllUser() {
+    return this.http.get<User[]>(this.baseUrl+'user', httpOptions)
+  }
+
   getClients() {
     return this.http.get<Client[]>(this.baseUrl+'get', httpOptions)
   }
-
   getClient(id : String) {
     return this.http.get(this.baseUrl+'get/'+id, httpOptions)
   }
-
   updateClient(data :Client){
     return this.http.put<Client>(this.baseUrl+'update/'+data.id,data,httpOptions)
   }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Chart } from 'chart.js';
 import { ClientService }  from '../client.service';
-import { Client, RootObject, Nodes } from '../client';
+import { Client, RootObject, Nodes, User } from '../client';
 import { ToastrService } from 'ngx-toastr'
 import { Router } from '@angular/router';
 import gql from 'graphql-tag';
@@ -13,6 +13,7 @@ import { split } from 'apollo-link';
 import { getMainDefinition } from "apollo-utilities";
 import { setContext } from 'apollo-link-context';
 import { InMemoryCache } from 'apollo-cache-inmemory';
+import { TokenStorageService } from 'src/app/_services/token-storage.service';
 
 const loadpoweraggregate = gql`
 subscription loadpoweraggregate{
@@ -75,9 +76,12 @@ query a ($time_1: timestamp!, $time_2: timestamp!){
 })
 export class ClientListComponent implements OnInit {
   clients : Client[]
+  Users : User[]
   selectedId : any
   newClient : Client[]
   chart: any
+  ids: any[]
+  usernames: any[]
   loadpoweraggregate
   genpoweraggregate
   exchangeData
@@ -86,6 +90,8 @@ export class ClientListComponent implements OnInit {
   result2
   power
   inputTime
+
+  isAdmin = false
  
  
 
@@ -96,11 +102,18 @@ export class ClientListComponent implements OnInit {
     private router: Router,
     private apollo: Apollo,
     private httpClient: HttpClient,
+    private user : TokenStorageService
   ) {}
 
   ngOnInit() {
+
+    if(this.user.getUser() != null){
+      if(this.user.getUser().roles == "admin" )
+        this.isAdmin = true
+    }
     this.apollo.removeClient()
     this.getClients();
+    this.getAllUser();
     this.getExchangeData()
     this.getDateFromOption("")
 
@@ -171,16 +184,31 @@ export class ClientListComponent implements OnInit {
         error => this.router.navigateByUrl('/login'));
   }
 
-  addClient(name: string, location :string, url:string, streamData:string ): void {
+  getAllUser() {
+    
+    this.service.getAllUser()
+      .subscribe(
+        users => {
+          this.Users = users;
+          this.ids = this.Users.map(x => x.id)
+          this.usernames = this.Users.map(x => x.username)
+          console.log(this.usernames)
+
+        },
+        error => {})
+  }
+
+  addClient(name: string, location :string, url:string, streamData:string , userid:number): void {
    
+    console.log("user id :"+userid)
     name = name.trim();
     location = location.trim();
     url = url.trim();
     streamData = streamData.trim();
     var data='{"id":"demo@0.2.0","nodes":{}}'
     
-    if (!name || !location || !url || !data || !streamData) { return; }
-    this.service.addClient({name,location,url,streamData, data} as Client)
+    if (!name || !location || !url || !data || !streamData || !userid ) { return; }
+    this.service.addClient({name,location,url,streamData, data, userid} as Client)
     .subscribe(client => {
       this.clients.push(client);
       this.showSuccess("Client data added Succesfully")

@@ -9,26 +9,38 @@ import { slideInAnimation } from './route-animation';
   animations:[ slideInAnimation ]
 })
 export class AppComponent {
+  isAdmin = false
   title = 'VPP';
-  private roles: string[];
+  roles: string;
   isLoggedIn = false;
   showAdminBoard = false;
   showModeratorBoard = false;
   username: string;
+  role :string
+  user
 
   constructor(private tokenStorageService: TokenStorageService) { }
 
   ngOnInit() {
     this.isLoggedIn = !!this.tokenStorageService.getToken();
+    if(this.tokenStorageService.getUser() != null){
+      if(this.tokenStorageService.getUser().roles == "admin" )
+        this.isAdmin = true
+    }
+
+  
+
 
     if (this.isLoggedIn) {
-      const user = this.tokenStorageService.getUser();
-      this.roles = user.roles;
+      this.user = this.tokenStorageService.getUser();
+      this.roles = this.user.roles;
 
       this.showAdminBoard = this.roles.includes('ROLE_ADMIN');
       this.showModeratorBoard = this.roles.includes('ROLE_MODERATOR');
 
-      this.username = user.username;
+      this.username = this.user.username;
+      this.roles = this.roles.charAt(0).toUpperCase() + this.roles.slice(1);
+    
     }
   }
 
