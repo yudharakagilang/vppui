@@ -8,18 +8,18 @@ import { ClientAllChartComponent } from './client-all-chart/client-all-chart.com
 import { ClientDetailTabComponent } from './client-detail-tab/client-detail-tab.component';
 
 const clientsRoutes: Routes = [
-  { path: 'clients', redirectTo: '/clients' },
+  { path: 'subsystems', redirectTo: '/subsystems' },
   // { path: 'client/:id', redirectTo: '/client/:id' },
   // { path: 'chart/:id', redirectTo: '/chart/:id' },
   { path: 'allchart', redirectTo: '/allchart' },
-  { path: 'client/data/:id', redirectTo: '/client/data/:id'},
-  { path: 'client/data/:id', redirectTo: '/client/data/:id'},
+  { path: 'subsystem/data/:id', redirectTo: '/subsystem/data/:id'},
+  { path: 'subsystem/data/:id', redirectTo: '/subsystem/data/:id'},
   // { path: 'tab/:id', redirectTo: '/tab/:id' },
-  { path: 'clients',  component: ClientListComponent, data:{animation: 'Home'} },
+  { path: 'subsystems',  component: ClientListComponent, data:{animation: 'Home'} },
   // { path: 'client/:id', component: ClientDetailComponent, data:{animation: 'About'} },
   // { path: 'chart/:id', component: ClientChartComponent, data:{animation: 'Contact'} },
   { path: 'allchart', component: ClientAllChartComponent, data:{animation: 'Contact'} },
-  { path: 'client', component: ClientDetailTabComponent, data:{animation: 'Contact'} ,children: [
+  { path: 'subsystem', component: ClientDetailTabComponent, data:{animation: 'Contact'} ,children: [
     { path: 'data/:id', component: ClientChartComponent },
     { path: 'edit/:id', component: ClientDetailComponent },
  

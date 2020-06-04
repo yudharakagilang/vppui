@@ -8,7 +8,7 @@
               aria-expanded="true" aria-controls="collapseOne">
               <h5 class="mb-0">
                 <a class="btn btn-link font-weight-bold">
-                  Add Client
+                  Add Subsystem
                 </a>
               </h5>
             </div>
@@ -53,7 +53,7 @@
                   <div class="form-group row">
                     <div class="col-sm-10">
                       <button (click)="addClient(clientName.value,location.value,url.value,streamData.value,userid.value)"
-                        type="submit" class="btn btn-success">Add Client</button>
+                        type="submit" class="btn btn-success">Add Subsystem</button>
                     </div>
                   </div>
                 </form>
@@ -67,7 +67,7 @@
 
       <div class="box">
         <div class="container">
-          <h2 class="font-weight-bold">Client List </h2>
+          <h2 class="font-weight-bold">Subsystem List </h2>
           <!--BOX-->
           <div *ngFor="let client of clients" [class.selected]="client.id === selectedId" class="">
 
@@ -93,7 +93,7 @@
                   </table>
                 </div>
                 <div class="col-4">
-                  <a [routerLink]="['/client/data/', client.id]" class="btn btn-success a-button" href="#"
+                  <a [routerLink]="['/subsystem/data/', client.id]" class="btn btn-success a-button" href="#"
                     role="button">See Detail</a>
                 </div>
               </div>

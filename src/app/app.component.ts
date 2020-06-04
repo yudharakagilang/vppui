@@ -33,10 +33,14 @@ export class AppComponent {
 
     if (this.isLoggedIn) {
       this.user = this.tokenStorageService.getUser();
+      if(this.user.roles == 'user'){
+        this.roles = 'client'
+      }
       this.roles = this.user.roles;
 
       this.showAdminBoard = this.roles.includes('ROLE_ADMIN');
       this.showModeratorBoard = this.roles.includes('ROLE_MODERATOR');
+
 
       this.username = this.user.username;
       this.roles = this.roles.charAt(0).toUpperCase() + this.roles.slice(1);
