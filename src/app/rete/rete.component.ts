@@ -22,6 +22,7 @@ import { Input } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { PriceFromHttp } from "./components/priceFromHttp-component";
 import { BatterySpecComponent } from './components/batterySpec-component';
+import { ControlComponent } from './components/control-component';
 
 // import { writeFileSync, readFileSync } from 'fs';
 
@@ -53,8 +54,8 @@ export class ReteComponent implements AfterViewInit {
     const container = this.el.nativeElement;
 
     const components = [
-      new NumComponent(),
-      new AddComponent(),
+      // new NumComponent(),
+      // new AddComponent(),
       // new GenerateNumComponent(),
       new MqttSubComponent(),
       new MqttPubComponent(),
@@ -65,9 +66,10 @@ export class ReteComponent implements AfterViewInit {
       new LoadAccumulatorComponent(),
       new GeneratorAccumulatorComponent(),
       //new TopicMergeComponent(),
-      new LogicComponent(),
+      // new LogicComponent(),
       new FuelCellComponent(),
-      new BatterySpecComponent()
+      new BatterySpecComponent(),
+      new ControlComponent()
     ];
 
     const editor = new NodeEditor("demo@0.2.0", container);

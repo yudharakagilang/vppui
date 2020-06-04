@@ -296,7 +296,7 @@ export class ClientListComponent implements OnInit {
   })
   .subscribe((data : RootObject) => {   
     let result = data.data.genpoweraggregate[0].power;
-    this.genpoweraggregate = result
+    this.genpoweraggregate = parseFloat(result).toFixed(2);
   })
 
   // load  subscribe
@@ -306,7 +306,7 @@ export class ClientListComponent implements OnInit {
   })
   .subscribe((data : RootObject) => {   
     let result = data.data.loadpoweraggregate[0].load;
-    this.loadpoweraggregate = result
+    this.loadpoweraggregate = parseFloat(result).toFixed(2);
   })
 
    // load  subscribe
@@ -316,7 +316,7 @@ export class ClientListComponent implements OnInit {
    })
    .subscribe((data : RootObject) => {   
      let result = data.data.totalexchange[0].power;
-     this.exchangeData = result
+     this.exchangeData = parseFloat(result).toFixed(2);
    })
 
 
