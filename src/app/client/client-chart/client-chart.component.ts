@@ -21,10 +21,7 @@ import * as mqttt from "mqtt";
 const pvSubscription = gql`
   subscription pv {
     pv(limit: 100, order_by: { input_time: desc }) {
-      //voltage
-      //current
       power
-      //energy
       input_time
     }
   }
