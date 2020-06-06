@@ -30,6 +30,9 @@ export class ClientService {
   ) {}
 
 
+  getAvailUser() {
+    return this.http.get<User[]>(this.baseUrl+'useravail', httpOptions)
+  }
   getAllUser() {
     return this.http.get<User[]>(this.baseUrl+'user', httpOptions)
   }

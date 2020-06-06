@@ -46,10 +46,9 @@ export class ClientDetailComponent implements OnInit {
     this.service.getClient(id).subscribe(
       (client) => {
         this.client$ = client[0];
-        console.log(this.client$)
         this.titleService.setTitle(this.client$.name);
         this.nrSelect = this.client$.userid
-        console.log(this.client$.userid)
+        console.log(this.nrSelect)
         this.url = this.client$.url;
       },
       (error) => this.router.navigateByUrl("/login")
@@ -57,14 +56,12 @@ export class ClientDetailComponent implements OnInit {
   }
 
   getAllUser() {
-    
     this.service.getAllUser()
       .subscribe(
         users => {
           this.Users = users;
           this.ids = this.Users.map(x => x.id)
           this.usernames = this.Users.map(x => x.username)
-          console.log(this.usernames)
         },
         error => {})
   }
