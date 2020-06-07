@@ -63,8 +63,7 @@ a-button{
 }
 .stats div{
 	border-right:1px solid #ebeff2;
-	width: 33.33333%;
-	float:left;
+    flex:auto;
 	text-align:center
 }
 .stats strong{
@@ -77,6 +76,7 @@ a-button{
 .stats a{
     font-size:31px;
 }
+
 
 
 

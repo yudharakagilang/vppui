@@ -36,6 +36,9 @@ export class ClientService {
   getAllUser() {
     return this.http.get<User[]>(this.baseUrl+'user', httpOptions)
   }
+  removeUser(id :String) {
+    return this.http.get<User[]>(this.baseUrl+'removeuser/'+id, httpOptions)
+  }
 
   getClients() {
     return this.http.get<Client[]>(this.baseUrl+'get', httpOptions)

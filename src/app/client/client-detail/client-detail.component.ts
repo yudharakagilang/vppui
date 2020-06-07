@@ -29,13 +29,10 @@ export class ClientDetailComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    
-  
     var parts = this.router.url.split("/");
     var lastSegment = parts.pop() || parts.pop(); // handle potential trailing slash
     this.getAllUser()
     this.getClient(lastSegment);
-    
   }
 
   onChange(UpdatedUrl: string): void {
@@ -76,7 +73,8 @@ export class ClientDetailComponent implements OnInit {
       },
 
       (error) => {
-        this.showError();
+        this.showError(error.error.errors[0].message);
+        console.log(error.error.errors[0])
       }
     );
   }
@@ -89,7 +87,7 @@ export class ClientDetailComponent implements OnInit {
         this.router.navigateByUrl("/clients")
       },
       error =>{
-        this.showError()
+        this.showError(error)
       }
        
       );
@@ -100,7 +98,7 @@ export class ClientDetailComponent implements OnInit {
 
   }
 
-  showError() {
-    this.toastr.error("Error!!", "Error Info");
+  showError(error) {
+    this.toastr.error(error);
   }
 }

@@ -13,6 +13,8 @@ export interface Client {
 export interface User {
  username: string;
  id: number;
+ email: string;
+ role: string;
 }
 export interface Node {
   voltage: string;

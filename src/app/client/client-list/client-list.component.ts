@@ -36,7 +36,7 @@ const genpoweraggregate = gql`
 subscription genpoweraggregate{
   genpoweraggregate(limit:1,order_by:{time:desc})
     {
-    power
+    power,time
     },
 }
 `;
@@ -92,6 +92,7 @@ export class ClientListComponent implements OnInit {
   inputTime
 
   isAdmin = false
+  time: any;
  
  
 
@@ -296,7 +297,10 @@ export class ClientListComponent implements OnInit {
   })
   .subscribe((data : RootObject) => {   
     let result = data.data.genpoweraggregate[0].power;
+    let time = data.data.genpoweraggregate[0].time;
     this.genpoweraggregate = parseFloat(result).toFixed(2);
+    this.time  = time.replace(/z|t/gi,' ').slice(0, -7);;
+    console.log(data.data.genpoweraggregate[0])
   })
 
   // load  subscribe
