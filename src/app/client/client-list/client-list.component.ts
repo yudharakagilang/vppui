@@ -187,7 +187,7 @@ export class ClientListComponent implements OnInit {
 
   getAllUser() {
     
-    this.service.getAllUser()
+    this.service.getAvailUser()
       .subscribe(
         users => {
           this.Users = users;

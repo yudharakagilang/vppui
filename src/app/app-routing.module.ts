@@ -7,7 +7,7 @@ import { RegisterComponent } from './register/register.component';
 
 const appRoutes: Routes = [
 
-  { path: '',   redirectTo: '/subsystems', pathMatch: 'full',data: {animation: 'Home'}, },
+  { path: '',   redirectTo: '/clients', pathMatch: 'full',data: {animation: 'Home'}, },
   { path: 'login', component: LoginComponent,data:{animation: 'About'} },
   { path: 'register', component: RegisterComponent,data:{animation: 'Home'} },
   { path: '**', component: PageNotFoundComponent },
