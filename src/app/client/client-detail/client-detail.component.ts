@@ -20,6 +20,13 @@ export class ClientDetailComponent implements OnInit {
   nrSelect = 0
   isAdmin= false;
 
+  nameIsNull
+  locationIsNull 
+  urlIsNull
+  dataIsNull
+  streamDataIsNull 
+  useridIsNull
+
   constructor(
     private router: Router,
     private service: ClientService,
@@ -65,6 +72,22 @@ export class ClientDetailComponent implements OnInit {
 
   save(client: Client, nrSelect) {
     client.userid = nrSelect
+    if(!client.name){
+      this.nameIsNull = true
+    }
+    if(!client.location){
+      this.locationIsNull = true
+    }
+    if(!client.url){
+      this.urlIsNull = true
+    }
+    if(!client.streamData){
+      this.streamDataIsNull = true
+    }
+    if(!client.userid){
+      this.useridIsNull = true
+    }
+    if (!client.name || !client.location || !client.url || !client.data || !client.streamData || !client.userid ) { return; }
     this.service.updateClient(client).subscribe(
       (client) => {
         this.client$ = client;
@@ -83,7 +106,7 @@ export class ClientDetailComponent implements OnInit {
     console.log(client.id)
     this.service.removeClient(client.id)
       .subscribe(client => {
-        this.showSuccess(("Client data deleted Succesfully"))
+        this.showSuccess(("Client deleted Succesfully"))
         this.router.navigateByUrl("/clients")
       },
       error =>{

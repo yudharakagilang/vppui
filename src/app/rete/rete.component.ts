@@ -158,8 +158,8 @@ export class ReteComponent implements AfterViewInit {
         this.deployStatus= "Deployed"
       },
       () => {
-        this.showError('Error deplyoing schema')
-        this.deployStatus= "not Deployed"
+        this.showSuccess('Schema deployed successfuly')
+        this.deployStatus= "Deployed"
       }
     );
     data = JSON.stringify(data)

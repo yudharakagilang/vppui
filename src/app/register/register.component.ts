@@ -68,7 +68,7 @@ export class RegisterComponent implements OnInit {
   }
 
   showSuccess(message: string) {
-    this.toastr.success(message, "Success Info");
+    this.toastr.success(message, "Account has been deleted successfully");
   }
 
   showError(error) {

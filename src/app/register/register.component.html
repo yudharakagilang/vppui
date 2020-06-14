@@ -51,11 +51,14 @@
                 </div>
                 <div class="form-group">
                   <label for="role">Role</label>
-                  <select class="custom-select" name="role" [(ngModel)]="form.role">
+                  <select class="custom-select" name="role" [(ngModel)]="form.role" #role="ngModel">
                     <option value="" disabled>Choose Role</option>
                     <option value="user">Client</option>
                     <option value="admin">Admin</option>
                   </select>
+                  <div class="alert-danger" *ngIf="f.submitted">
+                    <div *ngIf="role==null">Role is required</div>
+                  </div>
                 </div>
                 <div class="form-group">
                   <button class="btn btn-primary btn-block">Sign Up</button>

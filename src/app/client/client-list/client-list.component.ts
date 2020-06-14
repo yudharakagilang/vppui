@@ -42,7 +42,6 @@ subscription genpoweraggregate{
 `;
 
 const graphgen = gql`
-
 query a ($time_1: timestamp!, $time_2: timestamp!){
   genpoweraggregate: one_hour(where: 
    {_and: [
@@ -65,10 +64,53 @@ query a ($time_1: timestamp!, $time_2: timestamp!){
      time: bucket
    }
  }
+`;
 
-`
+const graphpv = gql`
+query a ($time_1: timestamp!, $time_2: timestamp!){
+  sumallpv: one_hourpv(where: 
+   {_and: [
+     {bucket: {_gte: $time_1}}
+     {bucket: {_lte: $time_2}}
+  ]
+    
+  }) {
+    power
+    time: bucket
+  }
+ }
+`;
+const graphfc = gql`
+query a ($time_1: timestamp!, $time_2: timestamp!){
+  sumallfc: one_hourfc(where: 
+   {_and: [
+     {bucket: {_gte: $time_1}}
+     {bucket: {_lte: $time_2}}
+  ]
+    
+  }) {
+    power
+    time: bucket
+  }
+ }
+`;
 
-;
+const graphbat  = gql`
+query a ($time_1: timestamp!, $time_2: timestamp!){
+  sumallbat: one_hourbat(where: 
+   {_and: [
+     {bucket: {_gte: $time_1}}
+     {bucket: {_lte: $time_2}}
+  ]
+    
+  }) {
+    power
+    time: bucket
+  }
+ }
+`;
+
+
 @Component({
   selector: 'app-client-list',
   templateUrl: './client-list.component.html',
@@ -76,10 +118,14 @@ query a ($time_1: timestamp!, $time_2: timestamp!){
 })
 export class ClientListComponent implements OnInit {
   clients : Client[]
+  client: Client
   Users : User[]
   selectedId : any
   newClient : Client[]
   chart: any
+  chartPv : any
+  chartFc : any
+  chartBat : any
   ids: any[]
   usernames: any[]
   loadpoweraggregate
@@ -93,6 +139,13 @@ export class ClientListComponent implements OnInit {
 
   isAdmin = false
   time: any;
+
+  nameIsNull
+  locationIsNull 
+  urlIsNull
+  dataIsNull
+  streamDataIsNull 
+  useridIsNull
  
  
 
@@ -116,9 +169,9 @@ export class ClientListComponent implements OnInit {
     this.getClients();
     this.getAllUser();
     this.getExchangeData()
-    this.getDateFromOption("")
+    this.getDateFromOption("","")
 
-    // chart 1
+    // chart Gen
       this.chart = new Chart('line', {
       type: 'line',
       data: {
@@ -169,8 +222,135 @@ export class ClientListComponent implements OnInit {
         }}
     });
 
-    
+    // Chart PV
+    this.chartPv = new Chart('linepv', {
+      type: 'line',
+      data: {
+        datasets: [
+          {   
+            label: 'Power',
+            backgroundColor: "rgba(54, 162, 235, 0.5)",
+            borderColor: 'rgba(54, 162, 235, 1)',
+            fill: true,
+            pointRadius: 1,
+            borderWidth : 1
+          }
+        ]
+      },
+      options: {
+        legend: {
+          display: true
+        },
+        scales: {
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Time in Hour'
+            },
+            type: 'time',
+            time: {
+                displayFormats: {
+                    hout: 'hA'
+                }
+            }
+          },
+        
+        ],
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Power (Watt)'
+            }
+          }]
+        }}
+    });
 
+     // Chart FC
+     this.chartFc = new Chart('linefc', {
+      type: 'line',
+      data: {
+        datasets: [
+          {   
+            label: 'Power',
+            backgroundColor: "rgba(54, 162, 235, 0.5)",
+            borderColor: 'rgba(54, 162, 235, 1)',
+            fill: true,
+            pointRadius: 1,
+            borderWidth : 1
+          }
+        ]
+      },
+      options: {
+        legend: {
+          display: true
+        },
+        scales: {
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Time in Hour'
+            },
+            type: 'time',
+            time: {
+                displayFormats: {
+                    hout: 'hA'
+                }
+            }
+          },
+        
+        ],
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Power (Watt)'
+            }
+          }]
+        }}
+    });
+
+     // Chart BAt
+     this.chartBat = new Chart('linebat', {
+      type: 'line',
+      data: {
+        datasets: [
+          {   
+            label: 'Power',
+            backgroundColor: "rgba(54, 162, 235, 0.5)",
+            borderColor: 'rgba(54, 162, 235, 1)',
+            fill: true,
+            pointRadius: 1,
+            borderWidth : 1
+          }
+        ]
+      },
+      options: {
+        legend: {
+          display: true
+        },
+        scales: {
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Time in Hour'
+            },
+            type: 'time',
+            time: {
+                displayFormats: {
+                    hout: 'hA'
+                }
+            }
+          },
+        
+        ],
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Power (Watt)'
+            }
+          }]
+        }}
+    });
+ 
 
   }
 
@@ -207,12 +387,29 @@ export class ClientListComponent implements OnInit {
     url = url.trim();
     streamData = streamData.trim();
     var data='{"id":"demo@0.2.0","nodes":{}}'
+
+    if(!name){
+      this.nameIsNull = true
+    }
+    if(!location){
+      this.locationIsNull = true
+    }
+    if(!url){
+      this.urlIsNull = true
+    }
+    if(!streamData){
+      this.streamDataIsNull = true
+    }
+    if(!userid){
+      this.useridIsNull = true
+    }
+
     
     if (!name || !location || !url || !data || !streamData || !userid ) { return; }
     this.service.addClient({name,location,url,streamData, data, userid} as Client)
     .subscribe(client => {
       this.clients.push(client);
-      this.showSuccess("Client data added Succesfully")
+      this.showSuccess("Client added Succesfully")
     },
 
     error =>{
@@ -222,19 +419,6 @@ export class ClientListComponent implements OnInit {
     );
   }
 
-  // deleteClient ( client: Client): void {
-  //   this.clients = this.clients.filter(h => h !== client);
-  //   this.service.removeClient(client.id)
-  //     .subscribe(client => {
-  //       this.showSuccess(("Client data deleted Succesfully"))
-  //     },
-  
-  //     error =>{
-  //       this.showError()
-  //     }
-       
-  //     );
-  // }
 
   showSuccess(message : string){
     this.toastr.success(message, 'Success Info');
@@ -251,6 +435,14 @@ export class ClientListComponent implements OnInit {
     //chart.data.datasets[1].data = _data2;
     chart.update();
   }
+
+  updateSingleDatachart(chart,_data1){
+      // chart.data.labels = _label;
+      chart.data.datasets[0].data= _data1
+      //chart.data.datasets[1].data = _data2;
+      chart.update();
+  }
+
 
   getExchangeData(){
     // const for HTTP
@@ -326,7 +518,7 @@ export class ClientListComponent implements OnInit {
 
 }
 
-setQueryGraph(_time_1 : string, _time_2:string){
+setQueryGraphGen(_time_1 : string, _time_2:string){
 
   this.apollo
   .subscribe({
@@ -347,6 +539,52 @@ setQueryGraph(_time_1 : string, _time_2:string){
  
 }
 
+setQueryGraphPv(_time_1 : string, _time_2:string){
+
+  this.apollo
+  .subscribe({
+    query: graphpv,
+    variables:{time_1:_time_2, time_2:_time_1} 
+  })
+  .subscribe((data: RootObject) => { 
+   this.result = data.data.sumallpv
+   this.result = this.renameKey(this.result)
+   console.log(this.result)
+   this.updateSingleDatachart(this.chartPv,this.result)
+  })
+ 
+}
+
+setQueryGraphFc(_time_1 : string, _time_2:string){
+
+  this.apollo
+  .subscribe({
+    query: graphfc,
+    variables:{time_1:_time_2, time_2:_time_1} 
+  })
+  .subscribe((data: RootObject) => { 
+   this.result = data.data.sumallfc
+   this.result = this.renameKey(this.result)
+   this.updateSingleDatachart(this.chartFc,this.result)
+  })
+ 
+}
+
+setQueryGraphBat(_time_1 : string, _time_2:string){
+
+  this.apollo
+  .subscribe({
+    query: graphbat,
+    variables:{time_1:_time_2, time_2:_time_1} 
+  })
+  .subscribe((data: RootObject) => { 
+   this.result = data.data.sumallbat
+   this.result = this.renameKey(this.result)
+   this.updateSingleDatachart(this.chartBat,this.result)
+  })
+ 
+}
+
 getDateForGraph(_date){
 var date = _date
 var dd = String(date.getDate()).padStart(2, '0');
@@ -356,37 +594,68 @@ var dayminone = String(date.getDate()-1).padStart(2, '0');
 return([(mm + '-' + dd + '-' + yyyy),(mm + '-' + dayminone + '-' + yyyy)]);
 }
 
-getDateFromOption(value : string){
-  console.log("hi")
+getDateFromOption(value : string, key : string){
   var date = new Date()
+  console.log(key)
   let result
   switch(value) {
     case "1":
         date.setDate(date.getDate()+1)
        result = this.getDateForGraph(date)
-       this.setQueryGraph(result[0],result[1])
+       if(key == 'gen'){
+       this.setQueryGraphGen(result[0],result[1])}
+       else if(key == 'fc'){
+       this.setQueryGraphFc(result[0],result[1])}
+       else if(key == 'pv'){
+       this.setQueryGraphPv(result[0],result[1])}
+       else if(key == 'bat'){
+       this.setQueryGraphBat(result[0],result[1])}
        console.log(result)
        break;
     case "2":
        date.setDate(date.getDate())
        result = this.getDateForGraph(date)
-       this.setQueryGraph(result[0],result[1])
+       if(key == 'gen'){
+        this.setQueryGraphGen(result[0],result[1])}
+        else if(key == 'fc'){
+        this.setQueryGraphFc(result[0],result[1])}
+        else if(key == 'pv'){
+        this.setQueryGraphPv(result[0],result[1])}
+        else if(key == 'bat'){
+        this.setQueryGraphBat(result[0],result[1])}
        console.log(result)
        break;
     case "3":
       date.setDate(date.getDate()-1)
       result = this.getDateForGraph(date)
-      this.setQueryGraph(result[0],result[1])
+      if(key == 'gen'){
+        this.setQueryGraphGen(result[0],result[1])}
+        else if(key == 'fc'){
+        this.setQueryGraphFc(result[0],result[1])}
+        else if(key == 'pv'){
+        this.setQueryGraphPv(result[0],result[1])}
+        else if(key == 'bat'){
+        this.setQueryGraphBat(result[0],result[1])}
       break;
     case "4":
       date.setDate(date.getDate()-2)
       result = this.getDateForGraph(date)
-      this.setQueryGraph(result[0],result[1])
+      if(key == 'gen'){
+        this.setQueryGraphGen(result[0],result[1])}
+        else if(key == 'fc'){
+        this.setQueryGraphFc(result[0],result[1])}
+        else if(key == 'pv'){
+        this.setQueryGraphPv(result[0],result[1])}
+        else if(key == 'bat'){
+        this.setQueryGraphBat(result[0],result[1])}
       break;
     default:
         date.setDate(date.getDate()+1)
         result = this.getDateForGraph(date)
-        this.setQueryGraph(result[0],result[1])
+          this.setQueryGraphGen(result[0],result[1])
+          this.setQueryGraphFc(result[0],result[1])
+          this.setQueryGraphPv(result[0],result[1])
+          this.setQueryGraphBat(result[0],result[1])
         console.log(result)
         break;
   }
