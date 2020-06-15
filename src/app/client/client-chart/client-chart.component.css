@@ -48,3 +48,7 @@
 :host ::ng-deep .mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar{
   background: rgba(255, 255, 255, 0) !important;
 } 
+
+.link {
+    color: #000000;
+}

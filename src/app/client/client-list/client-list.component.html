@@ -131,7 +131,7 @@
     </div>
     <div class="col">
       <div class="chart-diplay box-part2 text-center shadow">
-        <h3 class="font-weight-bold">Current State </h3>
+        <h2 class="font-weight-bold"><a class = "link" href="#" data-toggle="currentstate" title="Keadaan sekarang dari total pembangkit dan load">Current State </a></h2>
         <a class="font-weight-bold">Last Update :{{time}}</a>
 
         <div style="width: 100%">
@@ -139,14 +139,14 @@
             <div class="col">
               <div class="row">
                 <div>
-                  <strong>Total Load (Watt)</strong> <a>{{loadpoweraggregate}}</a>
+                  <strong class = "linkcard" href="#" data-toggle="totalload" title="Agregasi total daya pada load">Total Load (Watt)</strong> <a>{{loadpoweraggregate}}</a>
                 </div>
   
                 <div>
-                  <strong>Total Power Generation (Watt)</strong> <a>{{genpoweraggregate}}</a>
+                  <strong class = "linkcard" href="#" data-toggle="totalgen" title="Agregasi total daya pada seluruh pembangkit">Total Power Generation (Watt)</strong> <a>{{genpoweraggregate}}</a>
                 </div>
                 <div>
-                  <strong>Grid Exchange (Watt)</strong> <a>{{exchangeData}}</a>
+                  <strong class = "linkcard" href="#" data-toggle="totalgenload" title="Perbandingan dari agregasi total daya pada pembangkit dan load">Grid Exchange (Watt)</strong> <a>{{exchangeData}}</a>
                 </div>
               </div>
             </div>
@@ -161,7 +161,7 @@
           <option value="3">2 Days Ago </option>
           <option value="4">3 Days Ago </option>
         </select>
-        <h3 class="font-weight-bold">Total Generation/Load </h3>
+        <h3 class="font-weight-bold"><a class = "link" href="#" data-toggle="totalgenload" title="Agregasi total daya pada pembangkit dan load">Total Generation/Load </a></h3>
         <div style="width: 100%">
           <canvas id="line"></canvas>
         </div>
@@ -173,7 +173,7 @@
           <option value="3">2 Days Ago </option>
           <option value="4">3 Days Ago </option>
         </select>
-        <h3 class="font-weight-bold">Total PV Generation </h3>
+        <h3 class="font-weight-bold"><a class = "link" href="#" data-toggle="totalpv" title="Agregasi total daya pada photovoltaic">Total PV Generation </a></h3>
         <div style="width: 100%">
           <canvas id="linepv"></canvas>
         </div>
@@ -185,7 +185,7 @@
           <option value="3">2 Days Ago </option>
           <option value="4">3 Days Ago </option>
         </select>
-        <h3 class="font-weight-bold">Total Bat Generation </h3>
+        <h3 class="font-weight-bold"><a class = "link" href="#" data-toggle="totalbat" title="Agregasi total daya pada baterai">Total Bat Generation </a></h3>
         <div style="width: 100%">
           <canvas id="linebat"></canvas>
         </div>
@@ -197,7 +197,7 @@
           <option value="3">2 Days Ago </option>
           <option value="4">3 Days Ago </option>
         </select>
-        <h3 class="font-weight-bold">Total FC Generation </h3>
+        <h3 class="font-weight-bold"><a class = "link" href="#" data-toggle="totalfc" title="Agregasi total daya pada fuelcell">Total FC Generation </a></h3>
         <div style="width: 100%">
           <canvas id="linefc"></canvas>
         </div>
@@ -205,3 +205,9 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('[data-toggle="#"]').tooltip();
+});
+</script>
