@@ -31,7 +31,9 @@
                   href="#nav-batteryGeneration" role="tab" aria-controls="nav-contact" aria-selected="false" (click)="onSelect($event.target.id)" >Battery Generation</a>
                 <a *ngIf="dataBatteryPercentage" class="nav-item nav-link" id="nav-batteryPercentage-tab" data-toggle="tab"
                   href="#nav-batteryPercentage" role="tab" aria-controls="nav-contact" aria-selected="false" (click)="onSelect($event.target.id)" >Battery Percentage</a>
-                  <a *ngIf="dataLoad" class="nav-item nav-link" id="nav-load-tab" data-toggle="tab"
+                <a *ngIf="dataLoadReal" class="nav-item nav-link" id="nav-loadReal-tab" data-toggle="tab"
+                  href="#nav-loadReal" role="tab" aria-controls="nav-contact" aria-selected="false" (click)="onSelect($event.target.id)" >Load</a>
+                <a *ngIf="dataLoad" class="nav-item nav-link" id="nav-load-tab" data-toggle="tab"
                   href="#nav-load" role="tab" aria-controls="nav-contact" aria-selected="false" (click)="onSelect($event.target.id)" >Total Load</a>
                 <a *ngIf="dataGeneration" class="nav-item nav-link" id="nav-generation-tab" data-toggle="tab"
                   href="#nav-generation" role="tab" aria-controls="nav-contact" aria-selected="false" (click)="onSelect($event.target.id)" >Total Power Generation</a>
@@ -345,12 +347,47 @@
            </table>
            </div>
          </div>
+
+         <div class="tab-pane fade" id="nav-loadReal" role="tabpanel" aria-labelledby="nav-loadReal-tab">
+                 <div class ="overflow">
+                <table class="table" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th *ngFor="let data of titleLoadReal">{{data}}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let data of dataLoadReal">
+                      <td>{{data.load}}</td>
+                      <td>{{getFormattedDate(data.input_time)}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                </div>
+                  <div [hidden] = "!dataLoadReal" class="container">
+                  <div class="row">
+                    <div class="col-sm">
+                      <h3><a class = "link" href="#" data-toggle="powerload" title="Daya yang digunakan oleh beban">Power</a></h3>
+                      <select id="selectid" class="form-control-mb-12" (change)="getDateFromOption($event.target.value)">
+                        <option value="1" selected="selected">Today</option>
+                        <option value="2">Yesterday</option>
+                        <option value="3">2 Days Ago </option>
+                        <option value="4">3 Days Ago </option>
+                      </select>
+                      <div style="width: 100%">
+                        <canvas id="chartLoadRealPower"></canvas>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div class="tab-pane fade" id="nav-load" role="tabpanel" aria-labelledby="nav-load-tab">
                  <div class ="overflow">
                 <table class="table" cellspacing="0">
                   <thead>
                     <tr>
-                      <th *ngFor="let data of titleLoad">{{data}}</th>
+                      <th *ngFor="let data of titleLoad"><a class = "link" href="#" data-toggle="titleload" title="Akumulasi daya per hari pada beban yang menghasilkan energi dan akan terus bertambah setiap hari">{{data}}</a></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -367,7 +404,7 @@
                <table class="table" cellspacing="0">
                  <thead>
                    <tr>
-                     <th *ngFor="let data of titleGeneration">{{data}}</th>
+                     <th *ngFor="let data of titleGeneration"><a class = "link" href="#" data-toggle="titlegen" title="Akumulasi daya per hari pada pembangkit yang menghasilkan energi dan akan terus bertambah setiap hari">{{data}}</a></th>
                    </tr>
                  </thead>
                  <tbody>

@@ -84,6 +84,14 @@ const batteryPercentageSubscription = gql`
     }
   }
 `;
+const loadRealSubscription = gql`
+  subscription loadReal {
+    load(limit: 100, order_by: { input_time: desc }) {
+      load
+      input_time
+    }
+  }
+`;
 const generationSubscription = gql`
   subscription generation {
     kwh_generator(limit: 100, order_by: { input_time: desc }) {
@@ -166,6 +174,18 @@ const batteryGenerationQuery = gql`
   }
 `;
 
+const loadRealQuery = gql`
+  query loadRealQuery($time_1: timestamp!, $time_2: timestamp!) {
+    loadReal: fifteen_minute_load(
+      where: {
+        _and: [{ bucket: { _gte: $time_1 } }, { bucket: { _lte: $time_2 } }]
+      }
+    ) {
+      load
+      time: bucket
+    }
+  }
+`;
 
 
 
@@ -182,9 +202,9 @@ export class ClientChartComponent implements OnInit, OnDestroy {
   titlePV;
   dataPV;
   chartPVPower;
-  chartPVEnergy;
-  chartPVVoltage;
-  chartPVCurrent;
+  //chartPVEnergy;
+  //chartPVVoltage;
+  //chartPVCurrent;
 
   // DCON
   titleDcon;
@@ -232,6 +252,11 @@ export class ClientChartComponent implements OnInit, OnDestroy {
   //Generator
   titleGeneration;
   dataGeneration;
+
+  //Load Realtime
+  titleLoadReal;
+  dataLoadReal;
+  chartLoadRealPower;
 
   lastsegment;
   client$: Client;
@@ -862,6 +887,46 @@ export class ClientChartComponent implements OnInit, OnDestroy {
       },
     });
 
+    this.chartLoadRealPower = new Chart("chartLoadRealPower", {
+      type: 'line',
+      data: {
+        datasets: [
+          {
+            borderColor: "#3cba9f",
+            fill: true,
+          },
+          {
+            borderColor: "#3cba",
+            fill: true,
+          },
+        ],
+      },
+      options: {
+        legend: {
+          display: false,
+        },
+        scales: {
+          xAxes: [
+            {
+              type: "time",
+              scaleLabel: {
+                display: true,
+                labelString: "Time",
+              },
+            },
+          ],
+          yAxes: [
+            {
+              scaleLabel: {
+                display: true,
+                labelString: "Power (Watt)",
+              },
+            },
+          ],
+        },
+      },
+    });
+
   }
 
   
@@ -940,9 +1005,9 @@ export class ClientChartComponent implements OnInit, OnDestroy {
           .subscribe((data: RootObject) => {
             this.dataPV = data.data.pv;
             this.power = this.dataPV.map((node) => node.power);
-            this.current = this.dataPV.map((node) => node.current);
-            this.energy = this.dataPV.map((node) => node.energy);
-            this.voltage = this.dataPV.map((node) => node.voltage);
+            //this.current = this.dataPV.map((node) => node.current);
+            //this.energy = this.dataPV.map((node) => node.energy);
+            //this.voltage = this.dataPV.map((node) => node.voltage);
             this.input_time = this.dataPV.map((node) => node.input_time);
             this.titlePV = Object.keys(this.dataPV[0]);
             this.titlePV.pop("__typename");
@@ -1107,6 +1172,19 @@ export class ClientChartComponent implements OnInit, OnDestroy {
              this.titleBatteryPercentage = this.giveUnit(this.titleBatteryPercentage)
            });
 
+           //Load Realtime
+           this.apollo
+           .subscribe({
+             query: loadRealSubscription,
+           })
+           .subscribe((data: RootObject) => {
+             this.dataLoadReal = data.data.load;
+             this.titleLoadReal = Object.keys(this.dataLoadReal[0]);
+             this.titleLoadReal.pop("__typename");
+             this.titleLoadReal = this.captilize(this.titleLoadReal);
+             this.titleLoadReal = this.giveUnit(this.titleLoadReal)
+           });
+
         this.getDateFromOption("");
       },
       () => console.log("HAI")
@@ -1244,7 +1322,20 @@ export class ClientChartComponent implements OnInit, OnDestroy {
               });
             }
     
-      
+          if (this.activeTab == "nav-loadReal-tab" || this.firsttime) {
+            this.apollo
+              .subscribe({
+                query: loadRealQuery,
+                variables: { time_1: _time_2, time_2: _time_1 },
+              })
+              .subscribe((data: RootObject) => {
+                this.result = data.data.loadReal;
+                this.result = this.renameKey(this.result);
+                //  this.power = this.result.map(x => x.power)
+                //  this.inputTime = this.result.map(x =>x.time)
+                this.updateChartData(this.chartLoadRealPower, this.result);
+              });
+            }  
 
       this.firsttime = false;
     
@@ -1327,6 +1418,9 @@ export class ClientChartComponent implements OnInit, OnDestroy {
     }
     else if(arr[i]==('Percentage')){
       arr[i]= arr[i]+' (%)'
+    }
+    else if(arr[i]==('Load')){
+      arr[i]= 'Power (W)'
     }
 
   }
