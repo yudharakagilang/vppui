@@ -174,7 +174,7 @@ const batteryGenerationQuery = gql`
   }
 `;
 
-const loadRealQuery = gql`
+const loadRealQuery = gql`  
   query loadRealQuery($time_1: timestamp!, $time_2: timestamp!) {
     loadReal: fifteen_minute_load(
       where: {
@@ -1330,7 +1330,7 @@ export class ClientChartComponent implements OnInit, OnDestroy {
               })
               .subscribe((data: RootObject) => {
                 this.result = data.data.loadReal;
-                this.result = this.renameKey(this.result);
+                this.result = this.renameKey2(this.result);
                 //  this.power = this.result.map(x => x.power)
                 //  this.inputTime = this.result.map(x =>x.time)
                 this.updateChartData(this.chartLoadRealPower, this.result);
