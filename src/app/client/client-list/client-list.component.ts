@@ -14,6 +14,7 @@ import { getMainDefinition } from "apollo-utilities";
 import { setContext } from 'apollo-link-context';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { TokenStorageService } from 'src/app/_services/token-storage.service';
+import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 
 const loadpoweraggregate = gql`
 subscription loadpoweraggregate{
@@ -43,16 +44,36 @@ subscription genpoweraggregate{
 
 const graphgen = gql`
 query a ($time_1: timestamp!, $time_2: timestamp!){
-  genpoweraggregate: one_hour(where: 
-   {_and: [
-     {bucket: {_gte: $time_1}}
-     {bucket: {_lte: $time_2}}
-  ]
-    
-  }) {
-    power
-    time: bucket
-  },
+  sumallpv: one_hourpv(where: 
+    {_and: [
+      {bucket: {_gte: $time_1}}
+      {bucket: {_lte: $time_2}}
+   ]
+     
+   }) {
+     power
+     time: bucket
+   },
+   sumallfc: one_hourfc(where: 
+    {_and: [
+      {bucket: {_gte: $time_1}}
+      {bucket: {_lte: $time_2}}
+   ]
+     
+   }) {
+     power
+     time: bucket
+   },
+   sumallbat: one_hourbat(where: 
+    {_and: [
+      {bucket: {_gte: $time_1}}
+      {bucket: {_lte: $time_2}}
+   ]
+     
+   }) {
+     power
+     time: bucket
+   },
   loadpoweraggregate: one_hour2(where: 
     {_and: [
       {bucket: {_gte: $time_1}}
@@ -134,6 +155,9 @@ export class ClientListComponent implements OnInit {
 
   result
   result2
+  resultfc
+  resultbat
+  resultpv
   power
   inputTime
 
@@ -526,15 +550,36 @@ setQueryGraphGen(_time_1 : string, _time_2:string){
     variables:{time_1:_time_2, time_2:_time_1} 
   })
   .subscribe((data: RootObject) => { 
-   this.result = data.data.genpoweraggregate
+   this.resultfc = data.data.sumallfc
+   this.resultpv = data.data.sumallpv
+   this.resultbat = data.data.sumallbat
    this.result2 = data.data.loadpoweraggregate
-   this.result = this.renameKey(this.result)
    this.result2 = this.renameKey2(this.result2)
+   this.resultfc = this.renameKey(this.resultfc)
+   this.resultpv = this.renameKey(this.resultpv)
+   this.resultbat = this.renameKey(this.resultbat)
   //  this.power = this.result.map(x => x.power)
   //  this.inputTime = this.result.map(x =>x.time)
-   console.log(this.result)
-   console.log(this.result2)
-   this.updateChartData(this.chart,this.result,this.result2)
+  //  console.log(this.result)
+   console.log(this.resultpv)
+   var Total = this.resultpv
+   console.log(Total)
+   console.log(this.resultbat.length)
+   console.log(this.resultpv.length)
+   console.log(this.resultfc.length)
+
+for( var i = 0; i < this.resultpv.length; i++)
+    {
+
+      console.log(this.resultbat[i].y)
+      console.log(this.resultpv[i].y)
+      console.log(this.resultfc[i].y)
+      console.log("=======================================")
+        Total[i].y=(this.resultbat[i].y+this.resultfc[i].y+this.resultpv[i].y);
+    }
+
+    console.log(Total)
+   this.updateChartData(this.chart,Total,this.result2)
   })
  
 }
@@ -549,7 +594,7 @@ setQueryGraphPv(_time_1 : string, _time_2:string){
   .subscribe((data: RootObject) => { 
    this.result = data.data.sumallpv
    this.result = this.renameKey(this.result)
-   console.log(this.result)
+  //  console.log(this.result)
    this.updateSingleDatachart(this.chartPv,this.result)
   })
  
@@ -596,7 +641,7 @@ return([(mm + '-' + dd + '-' + yyyy),(mm + '-' + dayminone + '-' + yyyy)]);
 
 getDateFromOption(value : string, key : string){
   var date = new Date()
-  console.log(key)
+  // console.log(key)
   let result
   switch(value) {
     case "1":
@@ -610,7 +655,7 @@ getDateFromOption(value : string, key : string){
        this.setQueryGraphPv(result[0],result[1])}
        else if(key == 'bat'){
        this.setQueryGraphBat(result[0],result[1])}
-       console.log(result)
+      //  console.log(result)
        break;
     case "2":
        date.setDate(date.getDate())
@@ -623,7 +668,7 @@ getDateFromOption(value : string, key : string){
         this.setQueryGraphPv(result[0],result[1])}
         else if(key == 'bat'){
         this.setQueryGraphBat(result[0],result[1])}
-       console.log(result)
+      //  console.log(result)
        break;
     case "3":
       date.setDate(date.getDate()-1)
@@ -649,6 +694,54 @@ getDateFromOption(value : string, key : string){
         else if(key == 'bat'){
         this.setQueryGraphBat(result[0],result[1])}
       break;
+    case "5":
+      date.setDate(date.getDate()-3)
+      result = this.getDateForGraph(date)
+      if(key == 'gen'){
+        this.setQueryGraphGen(result[0],result[1])}
+        else if(key == 'fc'){
+        this.setQueryGraphFc(result[0],result[1])}
+        else if(key == 'pv'){
+        this.setQueryGraphPv(result[0],result[1])}
+        else if(key == 'bat'){
+        this.setQueryGraphBat(result[0],result[1])}
+      break;
+    case "6":
+      date.setDate(date.getDate()-4)
+      result = this.getDateForGraph(date)
+      if(key == 'gen'){
+        this.setQueryGraphGen(result[0],result[1])}
+        else if(key == 'fc'){
+        this.setQueryGraphFc(result[0],result[1])}
+        else if(key == 'pv'){
+        this.setQueryGraphPv(result[0],result[1])}
+        else if(key == 'bat'){
+        this.setQueryGraphBat(result[0],result[1])}
+      break;
+    case "7":
+      date.setDate(date.getDate()-5)
+      result = this.getDateForGraph(date)
+      if(key == 'gen'){
+        this.setQueryGraphGen(result[0],result[1])}
+        else if(key == 'fc'){
+        this.setQueryGraphFc(result[0],result[1])}
+        else if(key == 'pv'){
+        this.setQueryGraphPv(result[0],result[1])}
+        else if(key == 'bat'){
+        this.setQueryGraphBat(result[0],result[1])}
+      break;
+    case "8":
+        date.setDate(date.getDate()-6)
+        result = this.getDateForGraph(date)
+        if(key == 'gen'){
+          this.setQueryGraphGen(result[0],result[1])}
+          else if(key == 'fc'){
+          this.setQueryGraphFc(result[0],result[1])}
+          else if(key == 'pv'){
+          this.setQueryGraphPv(result[0],result[1])}
+          else if(key == 'bat'){
+          this.setQueryGraphBat(result[0],result[1])}
+        break;
     default:
         date.setDate(date.getDate()+1)
         result = this.getDateForGraph(date)
@@ -656,7 +749,7 @@ getDateFromOption(value : string, key : string){
           this.setQueryGraphFc(result[0],result[1])
           this.setQueryGraphPv(result[0],result[1])
           this.setQueryGraphBat(result[0],result[1])
-        console.log(result)
+        // console.log(result)
         break;
   }
 
