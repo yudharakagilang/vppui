@@ -18,8 +18,8 @@ export class MqttAddComponent extends Component implements AngularComponent {
     const inp1 = new Input('topic1', 'Topic1', stringSocket);
     const inp2 = new Input('topic2', 'Topic2', stringSocket);
     //const inp3 = new Input('topic3', 'Topic3', stringSocket);
-    const out1 = new Output('division', 'Number output socket', numSocket);
-    const out3 = new Output('mixedTopic', 'String output socket',stringSocket);
+    //const out1 = new Output('division', 'Number output socket', numSocket);
+    //const out3 = new Output('mixedTopic', 'String output socket',stringSocket);
     const out2 = new Output('topicOut', 'Topic Out', stringSocket);
 
     //topic1.addControl(new StringControl(this.editor, 'topic1'));

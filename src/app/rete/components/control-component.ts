@@ -10,10 +10,10 @@ export class ControlComponent extends Component {
   }
 
   builder(node) {
-    const out1 = new Output('hostPub', 'String output socket',stringSocket);
-    const out2 = new Output('passwordPub', 'String output socket',stringSocket);
-    const out3 = new Output('usernamePub', 'String output socket',stringSocket);
-    const out4 = new Output('portPub', 'Number output socket',numSocket);
+    //const out1 = new Output('hostPub', 'String output socket',stringSocket);
+    //const out2 = new Output('passwordPub', 'String output socket',stringSocket);
+    //const out3 = new Output('usernamePub', 'String output socket',stringSocket);
+    //const out4 = new Output('portPub', 'Number output socket',numSocket);
  
 
     return node

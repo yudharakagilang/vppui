@@ -19,7 +19,7 @@ export class MqttMultiplyComponent extends Component implements AngularComponent
     const inp2 = new Input('topicMul2', 'Topic2', stringSocket);
     //const inp3 = new Input('topicMul3', 'Topic3', stringSocket);
     //const out1 = new Output('division', 'Number output socket', numSocket);
-    const out3 = new Output('mixedMulTopic', 'String output socket',stringSocket);
+    //const out3 = new Output('mixedMulTopic', 'String output socket',stringSocket);
     const out2 = new Output('topicMulOut', 'Topic Out', stringSocket);
 
     //topic1.addControl(new StringControl(this.editor, 'topic1'));

@@ -5,7 +5,7 @@ import { NumControl } from '../controls/number-control';
 export class NumComponent extends Component {
 
   constructor() {
-    super('Title');
+    super('Number');
   }
 
   builder(node) {

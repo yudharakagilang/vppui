@@ -15,7 +15,7 @@ export class FuelCellComponent extends Component implements AngularComponent {
   }
 
   builder(node) {
-    const out1 = new Output('power', 'String output socket',numSocket);
+    //const out1 = new Output('power', 'String output socket',numSocket);
 
     return node
           .addControl(new NumControl(this.editor, 'power','Power'))

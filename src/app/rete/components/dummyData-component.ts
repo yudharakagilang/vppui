@@ -11,7 +11,7 @@ export class DummyDataComponent extends Component {
   }
 
   builder(node) {
-    const out1 = new Output('Out', 'Number output socket',numSocket);
+    //const out1 = new Output('Out', 'Number output socket',numSocket);
   
 
     return node

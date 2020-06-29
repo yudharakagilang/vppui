@@ -15,14 +15,14 @@ export class MqttDatabaseComponent extends Component implements AngularComponent
   }
 
   builder(node) {
-    const out1 = new Output('server', 'String output socket',stringSocket);
-    const out2 = new Output('portDB', 'Number output socket',numSocket);
-    const out3 = new Output('database', 'String output socket',stringSocket);
-    const out4 = new Output('table', 'String output socket',stringSocket);
-    const out5 = new Output('passwordDB', 'String output socket',stringSocket);
-    const out6 = new Output('usernameDB', 'String output socket',stringSocket);
-    const out7 = new Output('topicStr', 'String output socket',stringSocket);
-    const out8 = new Output('column', 'String output socket',stringSocket);
+    //const out1 = new Output('server', 'String output socket',stringSocket);
+    //const out2 = new Output('portDB', 'Number output socket',numSocket);
+    //const out3 = new Output('database', 'String output socket',stringSocket);
+    //const out4 = new Output('table', 'String output socket',stringSocket);
+    //const out5 = new Output('passwordDB', 'String output socket',stringSocket);
+    //const out6 = new Output('usernameDB', 'String output socket',stringSocket);
+    //const out7 = new Output('topicStr', 'String output socket',stringSocket);
+    //const out8 = new Output('column', 'String output socket',stringSocket);
     //const inp1 = new Input('topic', 'Topic',stringSocket);
     const inp1 = new Input('topicMerge1', 'Topic1', stringSocket);
     const inp2 = new Input('topicMerge2', 'Topic2', stringSocket);
